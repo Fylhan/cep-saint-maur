@@ -1,0 +1,28 @@
+<?php
+
+// Database
+defined('BDD_HOST') or define("BDD_HOST", 'localhost');
+defined('BDD_USER') or define("BDD_USER", 'root');
+defined('BDD_MDP') or define("BDD_MDP", 'root');
+defined('BDD_NAME') or define("BDD_NAME", 'cepsaintmaur');
+defined('PREFIXE_DB') or define('PREFIXE_DB', 'cep_');
+
+// Path constants
+// /!\ Convention : on ne termine jamais terminé par un slash !
+defined('SITE_PATH') or define('SITE_PATH', 'http://cepsaintmaur.fr/'); // Always a slash at the end (for IE)
+
+// Others
+defined('DEBUG') or define('DEBUG', false); // true, false
+defined('SecurityKey') or define('SecurityKey', '$2a$12$SH2SVrFpLOsneL5lHZRmuuSffz7yisadguqJfDgh1yiGUhBB91pV.'); // bcrypt
+defined('LastModification') or define('LastModification', mktime(0, 0, 0, 02, 04, 2016));
+defined('LastModificationActualites') or define('LastModificationActualites', LastModification);
+defined('NbParPage') or define('NbParPage', '2');
+defined('NbParPageAdmin') or define('NbParPageAdmin', '20');
+defined('NbMaxLienPagination') or define('NbMaxLienPagination', '10');
+defined('NbItemPerFeed') or define('NbItemPerFeed', '20');
+defined('EmailAdmin') or define('EmailAdmin', 'olivier@maridat.com');
+defined('Antibot') or define('Antibot', 12);
+defined('DisplayHelp') or define('DisplayHelp', 1);
+defined('CacheEnabled') or define('CacheEnabled', ! DEBUG);
+defined('CompressionEnabled') or define('CompressionEnabled', false);
+defined('StyleEnabled') or define('StyleEnabled', true);

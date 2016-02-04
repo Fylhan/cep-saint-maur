@@ -1,0 +1,92 @@
+#AddHandler x-mapp-php6 .php 
+RewriteEngine on
+RewriteBase /Web/Perso/cep-saint-maur/
+#RewriteBase /
+
+# Règle de redirection
+## --- REGLES WWW ---
+RewriteCond %{HTTP_HOST} ^www.cepsaintmaur.fr$
+RewriteRule ^(.*) http://cepsaintmaur.fr/$1 [QSA,L,R=301]
+
+ErrorDocument 404 http://cepsaintmaur.fr/404.html
+
+## --- REGLES SEULES ---
+RewriteRule ^(?:|index.html)$ index.php?module=content&action=index [L,QSA]
+RewriteRule ^([0-9]*)/?evenements.html?$ index.php?module=news&action=index&page=$1 [L,QSA]
+RewriteRule ^evenement-([0-9]*).html?$ index.php?module=news&action=show&id=$1 [L,QSA]
+RewriteRule ^activites.html$ index.php?module=content&action=activities [L,QSA]
+RewriteRule ^qui-sommes-nous.html$ index.php?module=content&action=presentation [L,QSA]
+RewriteRule ^politique-accessibilite.html$ index.php?module=content&action=help [L,QSA]
+RewriteRule ^contact.html$ index.php?module=contact&action=show [L,QSA]
+RewriteRule ^feed.xml$ index.php?module=feed&action=index [L,QSA]
+RewriteRule ^sitemap.xml$ index.php?module=sitemap&action=index [L,QSA]
+RewriteRule ^sitemap.html$ index.php?module=sitemap&action=index&type=human [L,QSA]
+
+RewriteRule ^([0-9]*)/?administration.html$ index.php?module=admin&action=index&page=$1 [L,QSA]
+RewriteRule ^administration-purge.html$ index.php?module=admin&action=purgeCache [L,QSA]
+RewriteRule ^administration-mailing.html$ index.php?module=admin&action=mailing&page=$1 [L,QSA]
+RewriteRule ^upload-picture.html$ index.php?module=upload&action=picture [L,QSA]
+RewriteRule ^upload-file.html$ index.php?module=upload&action=file [L,QSA]
+RewriteRule ^galery.json$ index.php?module=upload&action=galery [L,QSA]
+
+RewriteRule ^(.*).html$ index.php?module=error&action=$1 [L,QSA]
+
+
+# ----------------------------------------------------------------------
+# Proper MIME type for all files
+# ----------------------------------------------------------------------
+
+<IfModule mod_mime.c>
+
+  # JavaScript
+  # Normalize to standard type (it's sniffed in IE anyways)
+  # tools.ietf.org/html/rfc4329#section-7.2
+  AddType application/javascript js jsonp
+  AddType application/json json
+
+  # Audio
+  AddType audio/mp4 m4a f4a f4b
+  AddType audio/ogg oga ogg
+
+  # Video
+  AddType video/mp4 mp4 m4v f4v f4p
+  AddType video/ogg ogv
+  AddType video/webm webm
+  AddType video/x-flv flv
+
+  # SVG
+  # Required for svg webfonts on iPad
+  # twitter.com/FontSquirrel/status/14855840545
+  AddType image/svg+xml svg svgz
+  AddEncoding gzip svgz
+
+  # Webfonts
+  AddType application/font-woff woff
+  AddType application/vnd.ms-fontobject eot
+  AddType application/x-font-ttf ttf ttc
+  AddType font/opentype otf
+
+  # Assorted types
+  AddType application/octet-stream safariextz
+  AddType application/x-chrome-extension crx
+  AddType application/x-opera-extension oex
+  AddType application/x-shockwave-flash swf
+  AddType application/x-web-app-manifest+json webapp
+  AddType application/x-xpinstall xpi
+  AddType application/xml rss atom xml rdf
+  AddType image/webp webp
+  AddType image/x-icon ico
+  AddType text/cache-manifest appcache manifest
+  AddType text/vtt vtt
+  AddType text/x-component htc
+  AddType text/x-vcard vcf
+
+</IfModule>
+
+
+
+
+
+
+
+

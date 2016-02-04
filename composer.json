@@ -1,0 +1,31 @@
+{
+	"name": "fylhan/cep-saint-maur",
+	"description": "Site Web du CEP Saint-Maur",
+	"authors": [
+		{
+			"name": "Olivier Maridat",
+			"homepage": "http://olivier.maridat.com",
+			"role": "developper"
+		}
+	],
+	"homepage": "http://cepsaintmaur.fr",
+	"license": "LGPL-3.0",
+	"require": {
+		"twig/twig" : "1.*"
+	},
+	"autoload": {
+		"psr-0": {
+			"": "src/"
+		},
+		"files" : [
+			"src/Utils/tools.php",
+			"src/Library/FeedWriter/FeedWriter.php",
+			"src/Library/FeedWriter/FeedItem.php",
+			"src/Library/FeedWriter/FeedTypes.php"
+		]
+	},
+	"support": {
+		"source": "https://git.framasoft.org/fylhan/cep-saint-maur",
+		"issues": "https://trello.com/b/C2MTF6q8/cep-saint-maur"
+	}
+}

@@ -1,0 +1,13 @@
+*.buildpath
+*.settings
+*.externalToolBuilders
+*.project
+*.onetoc2
+*.phar
+config.php
+assets/js/*.min.js
+assets/css/*.min.css
+cache
+data
+!data/upload/.htaccess
+vendor
