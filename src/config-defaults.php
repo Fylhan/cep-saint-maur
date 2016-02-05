@@ -96,9 +96,9 @@ date_default_timezone_set('Europe/Paris');
 ini_set('session.use_cookies', 1); // Use cookies to store session.
 ini_set('session.use_only_cookies', 1); // Force cookies for session (phpsessionID forbidden in URL)
 ini_set('session.use_trans_sid', false); // Prevent php to use sessionID in URL if cookies are disabled.
-ini_set('session.save_path', 'sessions'); // Prevent php to use sessionID in URL if cookies are disabled.
-if (! is_dir('sessions'))
-    mkdir('sessions');
+ini_set('session.save_path', CACHE_PATH . '/sessions'); // Prevent php to use sessionID in URL if cookies are disabled.
+if (! is_dir(CACHE_PATH . '/sessions'))
+    mkdir(CACHE_PATH . '/sessions');
 session_name('cepsaintmaur');
 if (session_id() == '')
     session_start();

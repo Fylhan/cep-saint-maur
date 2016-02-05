@@ -45,7 +45,7 @@ class SecurityFilter implements Filterable {
 		$tplParams = array('UrlCourant' => 'administration.html');
 
 		// - Fill the body and print the page
-		$this->_controller->render('administration/layout-security-form.tpl', $tplParams);
+		$this->_controller->render('administration/login', $tplParams);
 		$this->_controller->getResponse()->printOut();
 
 		// -- Stop after prefilter

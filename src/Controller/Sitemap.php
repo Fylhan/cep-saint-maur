@@ -46,11 +46,11 @@ class Sitemap extends Action
         
         // -- Fill the body and print the page
         if ('human' == $type) {
-            $tpl = 'sitemap-human.twig';
+            $tpl = 'index-human.html.twig';
         }
         else {
             $this->controller->getResponse()->addHeader("Content-Type", "application/xml");
-            $tpl = 'sitemap.twig';
+            $tpl = 'index.html.twig';
         }
         $this->controller->render('api/' . $tpl, $params);
         $this->printOut();

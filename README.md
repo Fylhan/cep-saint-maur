@@ -14,6 +14,7 @@ Travail en cours
 * [▒▒▒▒  0%] Fix upload
 * [▒▒▒▒  0%] Check envoi d'email
 * [█▒▒▒ 10%] Simplify installation
+* [▒▒▒▒  0%] Add to travis
 * [▒▒▒▒  0%] Use PicoDB, sqlite, and automatically configure the db at installation
 * [▒▒▒▒  0%] [Accueil] Mettre à jour les images, en particulier pour le bloc "Actualités"
 * [▒▒▒▒  0%] [Nous connaître] Améliorer le contenu de la présentation, tout en restant court

@@ -52,7 +52,7 @@ class Contact extends Action
         );
         
         // -- Fill the body and print the page
-        $this->controller->render('contact/layout-contact.tpl', $tplPparams);
+        $this->controller->render('contact/show', $tplPparams);
         $this->printOut();
     }
 }

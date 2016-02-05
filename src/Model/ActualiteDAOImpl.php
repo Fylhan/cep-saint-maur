@@ -3,16 +3,16 @@ namespace Model;
 
 use Service\DAO;
 use Model\Actualite;
+use Core\DAOException;
 
 class ActualiteDAOImpl extends DAO implements ActualiteDAO
 {
 
-    public function getList($page = 1)
+    public function getList($page = 1, $admin = false, $nbPerPage = NbParPage, $appellationElement = 'événement')
     {
-        $nbElement = $this->calculNbActualites();
-        $nbPage = calculNbPage(NbParPage, $nbElement);
-        $appellationElement = 'événement';
-        $actualites = $this->findActualites($page);
+        $nbElement = $this->calculNbActualites($admin);
+        $nbPage = calculNbPage($nbPerPage, $nbElement);
+        $actualites = $this->findActualites($page, $admin, $nbPerPage, $admin);
         if (NULL != $actualites && count($actualites) > 0) {
             foreach ($actualites as $actualite) {
                 $actualite->computeExtrait();
@@ -200,4 +200,3 @@ class ActualiteDAOImpl extends DAO implements ActualiteDAO
     public function deleteActualites($ids)
     {}
 }
-?>

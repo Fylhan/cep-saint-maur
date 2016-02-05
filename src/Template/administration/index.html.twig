@@ -1,4 +1,4 @@
-{% extends 'administration/layout-base.tpl' %}
+{% extends 'administration/layout.html.twig' %}
 
 {% block SubTitle %}
 {% endblock %}
@@ -17,11 +17,11 @@
 
 <h2>Gérer les news</h2>
 <p>A partir de cette interface, vous pouvez ajouter / modifier / supprimer les news s'affichant sur la <a href="{{ SitePath }}">page d'accueil</a>.</p>
-<p><a href="{{ UrlCourant }}?update=0">Ajouter une news</a></p>
+<p><a href="administration-update.html?update=0">Ajouter une news</a></p>
 
 {% include 'bloc/paginationHaut.tpl' %}
 
-{% if Actualites|length > 0 %}
+{% if actualites|length > 0 %}
 	<table class="liste">
 	<thead>
 		<tr>
@@ -32,7 +32,7 @@
 		</tr>
 	</thead>
 	<tbody>
-	{% for actualite in Actualites %}
+	{% for actualite in actualites %}
 		<tr>
 			<td>
 				{% if actualite.titre != '' %}{{actualite.titre|raw}}
@@ -49,8 +49,8 @@
 				{% endif %}
 			</td>
 			<td>
-				<a href="{{ UrlCourant }}?update={{actualite.id}}" class="update" title="Modifier">Modifier</a>
-				| <a href="{{ UrlCourant }}?delete={{actualite.id}}" class="delete" title="Supprimer">Supprimer</a>
+				<a href="administration-update.html?id={{actualite.id}}" class="update" title="Modifier">Modifier</a>
+				| <a href="administration-delete.html?id={{actualite.id}}" class="delete" title="Supprimer">Supprimer</a>
 			</td>
 		</tr>
 	{% endfor %}
@@ -64,12 +64,12 @@
 
 <h2>Paramètres</h2>
 <p>Quelques paramêtre du sites sont configurables ci-dessous. Faites bien attention ;-)</p>
-<form action="{{ UrlCourant }}" method="post" id="formData" class="form">
+<form action="administration-data.html" method="post" id="formData" class="form">
 	<fieldset>
 		<legend>Interface utilisateur</legend>
 		<div>
 			<label for="nbParPage">Nombre de news par page</label>
-				<input type="number" min="1" name="nbParPage" id="nbParPage" value="{{NbParPage}}" placeholder="2" size="3" class="mini" tabindex="{% set tabindex = tabindex+1 %}{{ tabindex }}" />
+				<input type="number" min="1" name="NbParPage" id="nbParPage" value="{{NbParPage}}" placeholder="2" size="3" class="mini" tabindex="{% set tabindex = tabindex+1 %}{{ tabindex }}" />
 			<div class="clear"></div>
 			<p><a href="administration-purge.html">Effacer les fichiers de cache</a> <small>(à faire suite à l'installation d'une nouvelle version du site Web)</small></p>
 		</div>
@@ -78,15 +78,15 @@
 		<legend>Interface administrateur</legend>
 		<div>
 			<label for="nbParPageAdmin">Nombre de news par page</label>
-				<input type="number" min="1" name="nbParPageAdmin" id="nbParPageAdmin" value="{{NbParPageAdmin}}" placeholder="10" size="3" class="mini" tabindex="{% set tabindex = tabindex+1 %}{{ tabindex }}" />
+				<input type="number" min="1" name="NbParPageAdmin" id="nbParPageAdmin" value="{{NbParPageAdmin}}" placeholder="10" size="3" class="mini" tabindex="{% set tabindex = tabindex+1 %}{{ tabindex }}" />
 		</div>
 		<div>
 			<label for="emailAdmin">Email de l'administrateur</label>
-				<input type="email" name="emailAdmin" id="emailAdmin" value="{{EmailAdmin}}" tabindex="{% set tabindex = tabindex+1 %}{{ tabindex }}" />
+				<input type="email" name="EmailAdmin" id="emailAdmin" value="{{EmailAdmin}}" tabindex="{% set tabindex = tabindex+1 %}{{ tabindex }}" />
 		</div>
 		<div>
 			<label for="displayHelp">Afficher les conseils</label>
-				<input type="checkbox" name="displayHelp" id="displayHelp" value="1"{% if DisplayHelp %} checked="checked"{% endif%} class="mini" tabindex="{% set tabindex = tabindex+1 %}{{ tabindex }}" />
+				<input type="checkbox" name="DisplayHelp" id="displayHelp" value="1"{% if DisplayHelp %} checked="checked"{% endif%} class="mini" tabindex="{% set tabindex = tabindex+1 %}{{ tabindex }}" />
 		</div>
 	</fieldset>
 	<div class="formEnd">

@@ -16,7 +16,7 @@ class News extends Action
         $this->controller->getResponse()->addVar('metaDesc', 'Dernières nouvelles');
         $this->controller->getResponse()->addVar('metaKw', 'news, événements');
         
-        $this->controller->render('accueil/layout-actualites.tpl', $tplPparams);
+        $this->controller->render('news/index', $tplPparams);
         $this->printOut();
     }
 
@@ -44,7 +44,7 @@ class News extends Action
             throw $e;
         }
         // -- Fill the body and print the page
-        $this->controller->render('accueil/layout-actualite.tpl', $tplPparams);
+        $this->controller->render('news/show', $tplPparams);
         $this->printOut();
     }
 }

@@ -40,6 +40,11 @@ class Router
             'debug' => DEBUG,
             'charset' => Encodage
         ));
+        
+        $cacheFilter = new CacheFilter($this);
+        $this->addFilter($cacheFilter);
+        $securityFilter = new SecurityFilter($this);
+        $this->addFilter($securityFilter);
     }
 
     public static function getInstance()
@@ -54,33 +59,20 @@ class Router
     public function dispatch($defaults = null)
     {
         try {
-            // - Action par défaut
             if (null != $defaults && '' != $defaults && count($defaults) > 0) {
                 $this->_defaults = $defaults;
             }
             
-            // - Analyse la requête reçue pour trouver l'action à effectuer
             $parsed = $this->_request->route($this->_defaults);
             
-            // - Add filters
-            // Cache
-            $cacheFilter = new CacheFilter($this);
-            $this->addFilter($cacheFilter);
-            // Security
-            $securityFilter = new SecurityFilter($this);
-            $this->addFilter($securityFilter);
-            
-            // - Prefilter
             $pass = true;
             foreach ($this->_filters as $filter) {
                 $pass *= $filter->preFilter();
             }
             
             if ($pass) {
-                // - Action
                 $this->forward($parsed['module'], $parsed['action']);
-                
-                // - Postfilter
+
                 foreach (array_reverse($this->_filters) as $filter) {
                     $filter->postFilter();
                 }
@@ -92,7 +84,7 @@ class Router
 
     public function forward($module, $action, $params = null)
     {
-        $instance = $this->_getAction($module, ('default' == $module ? 'Static' : $action));
+        $instance = $this->_getAction($module, $action);
         $instance->{$action}();
     }
 
@@ -153,10 +145,9 @@ class Router
             }
         }
         
-        // -- Création du template
-        $tpl = $this->_twig->loadTemplate($tplPath);
+        // Create body
+        $tpl = $this->_twig->loadTemplate($tplPath.'.html.twig');
         $body = $tpl->render($this->_response->getVars());
-        // -- Ajout du body
         $this->_response->setBody($body);
     }
 
@@ -189,11 +180,11 @@ class Router
         if ($e instanceof MVCException) {
             $this->_response->addVar('metaTitle', 'Erreur - Page introuvable');
             $this->_response->addVar('page', $e->getPage());
-            $this->render('error/404.tpl');
+            $this->render('error/404');
         }
         else {
             $this->_response->addVar('metaTitle', 'Erreur critique');
-            $this->render('error/500.tpl');
+            $this->render('error/500');
         }
         logThatException($e);
         return $this->_response;

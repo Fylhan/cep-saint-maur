@@ -1,0 +1,67 @@
+{% extends 'layout-base.tpl' %}
+
+{% block content %}
+<div id="mainContent" role="main">
+	<article id="contact" class="bloc">
+		<header>
+			<h1><a href="contact.html" title="Nous trouver, nous contacter">Nous trouver</a></h1>
+		</header>
+		<figure>
+			<a href="contact.html" title="Nous trouver, nous contacter"><img src="{{ImgPath}}accueil.png" alt="Nous trouver" /></a>
+		</figure>
+		<p itemscope itemtype="http://schema.org/PostalAddress">
+			Au <span itemprop="streetAddress">137 rue Edgar Quinet</span> à <span itemprop="addressLocality">Saint-Maur-des-Fossés</span>, un culte est célébré tous les dimanches à 10h.
+		</p>
+		<p class="savoirplus"><a href="contact.html" title="Nous trouver, nous contacter">Nous contacter</a></p>
+	</article>
+	
+	<article id="activites" class="bloc">
+		<header>
+			<h1><a href="activites.html">Nos activités</a></h1>
+		</header>
+		<figure>
+			<a href="activites.html" title="Nos activités"><img src="{{ImgPath}}activites.png" alt="Nos Activités" /></a>
+		</figure>
+		<p>Régulièrement, nous proposons diverses activités pour les plus jeunes comme pour les plus âgés.</p>
+		<p class="savoirplus"><a href="activites.html" title="Nos activités">En savoir plus...</a></p>
+	</article>
+	
+	<article id="quiSommesNous" class="bloc">
+		<header>
+			<h1><a href="qui-sommes-nous.html">Nous connaître</a></h1>
+		</header>
+		<figure>
+			<a href="qui-sommes-nous.html" title="Nous connaître"><img src="{{ImgPath}}qui-sommes-nous.png" alt="Nous connaître" /></a>
+		</figure>
+		<p>
+		Nous sommes une église évangélique protestante.
+		Quelle est notre histoire&#160;? Qui sommes-nous&#160;? En quoi croyons-nous&#160;?
+		</p>
+		<p class="savoirplus"><a href="qui-sommes-nous.html" title="Nous connaître">En savoir plus...</a></p>
+	</article>
+</div>
+
+{% if actualites %}
+<aside>
+<article id="actualites" class="actualitesPage page">
+	<figure>
+		<img src="{{ImgPath}}contact.png" alt="Actualités" />
+	</figure>
+	
+	<header>
+		<h1><a href="{% if nbPage > 1 %}2/{% endif %}evenements.html">Dernières <strong>Nouvelles</strong></a></h1>
+		{% if nbPage > 1 %}<p>&raquo; <a href="2/evenements.html">Voir les événements plus anciens</a></p>{% endif %}
+	</header>
+	{% for actualite in actualites %}
+		<article class="actualite">
+			<header>
+				<h2><a href="evenement-{{actualite.id}}.html">{{actualite.titre}}</a></h2>
+				<p>{{actualite.dateDebutString|capitalize}}</p>
+			</header>
+			<div class="texte">{{actualite.extrait|raw}}</div>
+		</article>
+	{% endfor %}
+</article>
+</aside>
+{% endif %}
+{% endblock content %}

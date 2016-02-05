@@ -11,31 +11,26 @@ class Admin extends Action
 
     public function index($params = array())
     {
-        $request = $this->controller->getRequest();
-        $params['layout'] = 'index';
+        $params = $this->news->getList(calculPage(), true, NbParPageAdmin, 'actualité');
+        $params['UrlEmailAdmin'] = getUrlImgEmail(EmailAdmin);
+        $params['NbParPage'] = NbParPage;
+        $params['NbParPageAdmin'] = NbParPageAdmin;
+        $params['EmailAdmin'] = EmailAdmin;
+        $params['DisplayHelp'] = DisplayHelp;
+
+        $this->response->addVar('metaTitle', 'Administration');
+        $this->controller->render('administration/index', $params);
+        $this->printOut();
+    }
+
+    public function update($params = array())
+    {
+        $id = $this->request->getParam('id', 'int');
         
-        // --- Actions
-        // -- News
-        // - Si on a une demande de suppression
-        if (NULL != ($id = $request->getParam('delete', 'int'))) {
-            if ($this->news->deleteActualite($id)) {
-                // Cache obsolete
-                CacheManager::resetCache();
-                // Send response
-                $message = new Message('La news ' . $id . ' a été supprimée. Bien joué !', OK);
-                $this->controller->getResponse()->setFlash($message->toString());
-                $this->controller->redirect('administration.html');
-            }
-            else {
-                $message = new Message('Arg, ça ne marche pas. La news ' . $id . ' n\'a pas été supprimée.', ERREUR);
-                $this->controller->getResponse()->addVar('Message', $message->toString());
-            }
-        }
-        // - Si on update
-        if ($request->isParam('sendNews')) {
-            // Update
+        // Update
+        if ($this->request->isParam('sendNews')) {
             $actualite = new Actualite();
-            $actualite->fill($request->getParams());
+            $actualite->fill($this->request->getParams());
             $actualite = $this->news->updateActualite($actualite);
             $params['Actualite'] = $actualite;
             // Cache obsolete
@@ -47,17 +42,62 @@ class Admin extends Action
                     $data = preg_replace('!define\(\'LastModificationActualites\', \'[0-9]*\'\);!i', $toAdd, $data);
                 }
                 else {
+                    if (empty($data)) {
+                        $data = '<?php'."\n";
+                    }
                     $data .= $toAdd;
                 }
                 file_put_contents(ParameterFilePath, $data);
             }
             // Send response
             $message = new Message('Voilà une news ajoutée avec succès, bien joué !', OK);
-            $this->controller->getResponse()->setFlash($message->toString());
-            $this->controller->redirect('administration.html?update=' . $actualite->getId() . '#administrationPage');
+            $this->response->setFlash($message->toString());
+            $this->response->redirect('administration-update.html?id=' . $actualite->getId() . '#administrationPage');
         }
-        // -- Parameters
-        if ($request->isParam('sendData')) {
+        
+        // Display
+        if (0 == $id) {
+            $params['Actualite'] = new Actualite();
+        }
+        else {
+            $params['Actualite'] = $this->news->findActualiteById($id);
+        }
+        if (null == $params['Actualite']) {
+            $message = new Message('La news ' . $id . ' n\'existe pas. C\'est un problème ?', NEUTRE);
+            $this->response->setFlash($message->toString());
+            $this->response->redirect('administration.html');
+        }
+        $this->controller->render('administration/update', $params);
+        $this->printOut();
+    }
+
+    public function delete($params = array())
+    {
+        $id = $this->request->getParam('id', 'int');
+        if ($this->news->deleteActualite($id)) {
+            // Cache obsolete
+            CacheManager::resetCache();
+            // Send response
+            $message = new Message('La news ' . $id . ' a été supprimée. Bien joué !', OK);
+            $this->response->setFlash($message->toString());
+            $this->response->redirect('administration.html');
+        }
+        $message = new Message('Arg, ça ne marche pas. La news ' . $id . ' n\'a pas été supprimée.', ERREUR);
+        $this->response->setFlash($message->toString());
+        $this->response->redirect('administration.html');
+    }
+
+    public function purgeCache()
+    {
+        CacheManager::resetCache(true);
+        $message = new Message('Cache supprimé ! On refait une partie de cache-cache ?', OK);
+        $this->response->setFlash($message->toString());
+        $this->response->redirect('administration.html');
+    }
+
+    public function updateData($params = array())
+    {
+        if ($this->request->isParam('sendData')) {
             // Generate content
             $data = '<?php' . "\n";
             if (null != $_POST['nbParPage'] && 0 != $_POST['nbParPage']) {
@@ -73,88 +113,22 @@ class Admin extends Action
             $data .= 'define(\'LastModificationActualites\', \'' . LastModificationActualites . '\');' . "\n";
             $data .= "\n";
             
-            // Open and update the data-user file
-            if (false != ($fp = fopen(ParameterFilePath, 'w+')) && fwrite($fp, $data)) {
-                fclose($fp);
+            if (false != file_put_contents(ParameterFilePath, $data)) {
                 $message = new Message('Paramètres bien enregistrés, super !', OK);
-                $this->controller->getResponse()->setFlash($message->toString());
-                $this->controller->redirect('administration.html');
+                $this->response->setFlash($message->toString());
+                $this->response->redirect('administration.html');
             }
-            // Error
-            else {
-                $message = new Message('Arg, impossible de mettre à jour les paramètres. Désolé, mais il va falloir en parler avec 
+        }
+        // Error
+        $message = new Message('Arg, impossible de mettre à jour les paramètres. Désolé, mais il va falloir en parler avec
 un administrateur.', ERREUR);
-                $this->controller->getResponse()->addVar('Message', $message->toString());
-            }
-        }
-        
-        // --- Display Actions
-        // - Si on a une demande de modification
-        if (NULL !== ($id = $request->getParam('update', 'int'))) {
-            $params['layout'] = 'update';
-            // Creation
-            if (0 == $id) {
-                $actualite = new Actualite();
-            }
-            else {
-                $actualite = $this->news->findActualiteById($id);
-            }
-            if (null != $actualite) {
-                $params['Actualite'] = $actualite;
-            }
-            else {
-                $message = new Message('La news ' . $id . ' n\'existe pas. C\'est un problème ?', NEUTRE);
-                $this->controller->getResponse()->setFlash($message->toString());
-                $this->controller->redirect('administration.html');
-            }
-        }
-        // - Sinon liste des actualités
-        else {
-            // Récupération des éléments
-            $page = calculPage();
-            $this->controller->getResponse()->addVar('page', $page);
-            $nbElement = $this->news->calculNbActualites(true);
-            $nbPage = calculNbPage(NbParPageAdmin, $nbElement);
-            $appellationElement = 'actualité';
-            $actualites = $this->news->findActualites($page, true, NbParPageAdmin);
-            $params['page'] = $page;
-            $params['nbElement'] = $nbElement;
-            $params['nbMaxLienPagination'] = NbMaxLienPagination;
-            $params['nbPage'] = $nbPage;
-            $params['appellationElement'] = $appellationElement;
-            $params['Actualites'] = $actualites;
-        }
-        
-        // -- Prepare Meta Data
-        $this->controller->getResponse()->addVar('metaTitle', 'Administration');
-        
-        // -- Create params
-        $tplPparams = array(
-            'UrlCourant' => 'administration.html',
-            'NbParPage' => NbParPage,
-            'NbParPageAdmin' => NbParPageAdmin,
-            'DisplayHelp' => DisplayHelp,
-            'UrlEmailAdmin' => getUrlImgEmail(EmailAdmin),
-            'EmailAdmin' => EmailAdmin
-        );
-        $tplPparams = array_merge($tplPparams, $params);
-        
-        // -- Fill the body and print the page
-        $this->controller->render('administration/layout-' . $params['layout'] . '.tpl', $tplPparams);
-        $this->printOut();
-    }
-
-    public function purgeCache()
-    {
-        CacheManager::resetCache(true);
-        $message = new Message('Cache supprimé ! On refait une partie de cache-cache ?', OK);
-        $this->controller->getResponse()->setFlash($message->toString());
-        $this->_vars = NULL;
-        $this->controller->redirect('administration.html');
+        $this->response->setFlash($message->toString());
+        $this->response->redirect('administration.html');
     }
 
     public function mailing($params = array())
     {
+        // /!\ Ce code fourni par 1&1, notre hébergeur, ne fonctionne pas... Dommage.
         $params = array();
         $params['ListesDiffusion'] = array(
             'flambeaux@cepsaintmaur.com',
@@ -162,7 +136,7 @@ un administrateur.', ERREUR);
             'musique@cepsaintmaur.com'
         );
         // -- Prepare Meta Data
-        $this->controller->getResponse()->addVar('metaTitle', 'Administration - Gérer les listes de diffusion');
+        $this->response->addVar('metaTitle', 'Administration - Gérer les listes de diffusion');
         
         // -- Create params
         $tplPparams = array(
@@ -171,7 +145,7 @@ un administrateur.', ERREUR);
         $tplPparams = array_merge($tplPparams, $params);
         
         // -- Fill the body and print the page
-        $this->controller->render('administration/layout-diffusion-list.tpl', $tplPparams);
+        $this->controller->render('administration/mailing', $tplPparams);
         $this->printOut();
     }
 }
