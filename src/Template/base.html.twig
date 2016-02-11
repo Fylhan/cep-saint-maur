@@ -1,4 +1,3 @@
-{# layout-base.tpl #}
 <!DOCTYPE html>
 <html lang="{{ Locale }}">
 <head>
@@ -15,11 +14,9 @@
 		<link rel="stylesheet" type="text/css" href="{{ThemePath}}/css/ie.min.css" />
 	<![endif]-->
 	{% endblock %}
-	{% if StyleEnabled %}
 	{%- block css %}
 	<link rel="stylesheet" type="text/css" title="{{SiteNom}}" href="{{ThemePath}}/css/style.min.css" />
 	{% endblock %}
-	{% endif %}
 	{%- block headProperties %}
 	<link rel="start" href="./" title="Accueil" />
 	<link rel="help" href="politique-accessibilite.html" title="Accessibilité" />
@@ -42,7 +39,7 @@
 <div id="content">
 {% block nav %}
 {% if not nomenu %}
-	{% include 'bloc/nav.tpl' %}
+	{% include 'helper/menu.html.twig' %}
 {% endif %}
 {% endblock %}
 {% block content %}
@@ -81,7 +78,6 @@
 </footer>
 
 {% block js %}
-<script type="text/javascript">var pkUrl="http://statistiques.la-bnbox.fr/";document.write(unescape("%3Cscript src='"+pkUrl+"piwik.js' type='text/javascript'%3E%3C/script%3E"));try{var piwikTracker=Piwik.getTracker(pkUrl+"piwik.php",3);piwikTracker.trackPageView();piwikTracker.enableLinkTracking();}catch(err){}</script>
 {% endblock %}
 </body>
 </html>

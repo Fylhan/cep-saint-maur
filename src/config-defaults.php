@@ -13,18 +13,11 @@ defined('MetaTitle') or define('MetaTitle', SiteNom);
 defined('MetaKw') or define('MetaKw', 'Dieu, église, cep, saint-maur');
 defined('MetaDesc') or define('MetaDesc', SiteNom);
 
-// Database
-defined('BDD_HOST') or define("BDD_HOST", 'localhost');
-defined('BDD_USER') or define("BDD_USER", 'root');
-defined('BDD_MDP') or define("BDD_MDP", 'root');
-defined('BDD_NAME') or define("BDD_NAME", 'cepsaintmaur');
-defined('PREFIXE_DB') or define('PREFIXE_DB', 'cep_');
-
 // Path constants
 // Convention : on ne termine jamais terminé par un slash !
 defined('SITE_PATH') or define('SITE_PATH', 'http://cepsaintmaur.fr/');
 defined('POSITION_RELATIVE') or define('POSITION_RELATIVE', '');
-defined('DATA_PATH') or define('DATA_PATH', POSITION_RELATIVE . 'app');
+defined('DATA_PATH') or define('DATA_PATH', POSITION_RELATIVE . 'data');
 defined('CACHE_PATH') or define('CACHE_PATH', POSITION_RELATIVE . 'cache');
 defined('INCLUDE_PATH') or define('INCLUDE_PATH', POSITION_RELATIVE . 'src');
 defined('VENDOR_PATH') or define('VENDOR_PATH', POSITION_RELATIVE . 'vendor');
@@ -39,6 +32,16 @@ defined('UploadDir') or define('UploadDir', DATA_PATH . '/upload/');
 defined('ParameterFilePath') or define('ParameterFilePath', CACHE_PATH . '/config-user.php');
 defined('BanFilePath') or define('BanFilePath', CACHE_PATH . '/ban.json');
 defined('GaleryFilePath') or define('GaleryFilePath', CACHE_PATH . '/galery.json');
+
+// Database
+defined('DB_DRIVER') or define("DB_DRIVER", 'sqlite');
+defined('DB_FILENAME') or define('DB_FILENAME', DATA_PATH.'/db.sqlite'); // Sqlite configuration
+defined('DB_USERNAME') or define('DB_USERNAME', 'root');
+defined('DB_PASSWORD') or define('DB_PASSWORD', 'root');
+defined('DB_HOSTNAME') or define('DB_HOSTNAME', 'localhost');
+defined('DB_NAME') or define('DB_NAME', 'cepsaintmaur');
+defined('DB_PORT') or define('DB_PORT', null);
+defined('DB_PREFIX') or define('DB_PREFIX', 'cep_');
 
 // Others
 defined('DEBUG') or define('DEBUG', true); // true, false
@@ -72,7 +75,6 @@ defined('LoginTryNumber') or define('LoginTryNumber', 5); // 2 hours
 defined('LoginBanishedTimeout') or define('LoginBanishedTimeout', 30 * 60); // 30 min
 defined('CacheEnabled') or define('CacheEnabled', ! DEBUG);
 defined('CompressionEnabled') or define('CompressionEnabled', false);
-defined('StyleEnabled') or define('StyleEnabled', true);
 
 define('OK_REDIRECTION', 1);
 define('OK_NONBLOQUANT', 2);

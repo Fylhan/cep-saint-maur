@@ -1,4 +1,4 @@
-{% extends 'layout-base.tpl' %}
+{% extends 'base.html.twig' %}
 
 {% block content %}
 <div id="mainContent" role="main">
@@ -10,19 +10,19 @@
 	<header>
 		<h1>Dernières Nouvelles</h1>
 	</header>
-	{% include 'bloc/paginationHaut.tpl' %}
+	{% include 'helper/paginator-top.html.twig' %}
 	{% for actualite in actualites %}
 		<article class="actualite">
 			<header>
 				<h2><a href="evenement-{{actualite.id}}.html">{{actualite.titre}}</a></h2>
-				<p>{{actualite.dateDebutString|capitalize}}</p>
+				<p>{{actualite.dateTimeStart|date('d/m/Y')}}</p>
 			</header>
 			<div class="texte">{{actualite.extrait|raw}}</div>
 		</article>
 	{% else %}
 	<p>Aucun événement en ce moment.</p>
 	{% endfor %}
-	{% include 'bloc/paginationBas.tpl' %}
+	{% include 'helper/paginator-bottom.html.twig' %}
 </article>
 </div>
 {% endblock content %}

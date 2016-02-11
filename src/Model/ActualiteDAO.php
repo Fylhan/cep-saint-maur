@@ -9,11 +9,4 @@ interface ActualiteDAO
     public function findActualites($page = 1, $memeLesDesactives = false, $nbParPage = NbParPage);
 
     public function calculNbActualites($memeLesDesactives = false);
-
-    public function updateActualite(Actualite $actualite);
-
-    public function deleteActualite($id);
-
-    public function deleteActualites($ids);
 }
-?>

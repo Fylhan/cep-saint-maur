@@ -10,34 +10,30 @@ class Content extends Action
     {
         $params = $this->news->getList(calculPage());
         $params['nomenu'] = true;
-        $this->controller->render('content/index', $params);
-        $this->printOut();
+        $this->response->render('content/index', $params);
     }
 
     public function presentation($params = array())
     {
-        $this->controller->getResponse()->addVar('metaTitle', 'Nous connaître');
-        $this->controller->getResponse()->addVar('metaDesc', 'Le CEP Saint-Maur est une communauté évangélique protestante. Quelle est notre histoire ? Qui sommes-nous ? En quoi croyons-nous ?');
-        $this->controller->getResponse()->addVar('metaKw', 'jésus, saint-esprit, protestant, évangélique, caef, cnef, confession de foi');
-        $this->controller->render('content/presentation', array());
-        $this->printOut();
+        $this->response->addVar('metaTitle', 'Nous connaître');
+        $this->response->addVar('metaDesc', 'Le CEP Saint-Maur est une communauté évangélique protestante. Quelle est notre histoire ? Qui sommes-nous ? En quoi croyons-nous ?');
+        $this->response->addVar('metaKw', 'jésus, saint-esprit, protestant, évangélique, caef, cnef, confession de foi');
+        $this->response->render('content/presentation', array());
     }
 
     public function activities($params = array())
     {
-        $this->controller->getResponse()->addVar('metaTitle', 'Nos activités');
-        $this->controller->getResponse()->addVar('metaDesc', 'Au CEP Saint-Maur, nous proposons régulièrement diverses activités pour les plus jeunes comme pour les plus âgés.');
-        $this->controller->getResponse()->addVar('metaKw', 'culte, atelier, flambeaux, scout, scoutisme, gdj, groupe de jeunes');
-        $this->controller->render('dcontent/activities', array());
-        $this->printOut();
+        $this->response->addVar('metaTitle', 'Nos activités');
+        $this->response->addVar('metaDesc', 'Au CEP Saint-Maur, nous proposons régulièrement diverses activités pour les plus jeunes comme pour les plus âgés.');
+        $this->response->addVar('metaKw', 'culte, atelier, flambeaux, scout, scoutisme, gdj, groupe de jeunes');
+        $this->response->render('content/activities', array());
     }
 
     public function help($params = array())
     {
-        $this->controller->getResponse()->addVar('metaTitle', 'Politique d\'accessibilité');
-        $this->controller->getResponse()->addVar('metaDesc', 'Politique d\'accessibilité du site du CEP Saint-Maur.');
-        $this->controller->getResponse()->addVar('metaKw', 'accesskey, accessibilité, about');
-        $this->controller->render('content/help', array());
-        $this->printOut();
+        $this->response->addVar('metaTitle', 'Politique d\'accessibilité');
+        $this->response->addVar('metaDesc', 'Politique d\'accessibilité du site du CEP Saint-Maur.');
+        $this->response->addVar('metaKw', 'accesskey, accessibilité, about');
+        $this->response->render('content/help', array());
     }
 }

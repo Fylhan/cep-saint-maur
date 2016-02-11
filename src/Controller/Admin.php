@@ -2,7 +2,6 @@
 namespace Controller;
 
 use Core\Action;
-use Core\Message;
 use Model\Actualite;
 use Service\CacheManager;
 
@@ -17,81 +16,55 @@ class Admin extends Action
         $params['NbParPageAdmin'] = NbParPageAdmin;
         $params['EmailAdmin'] = EmailAdmin;
         $params['DisplayHelp'] = DisplayHelp;
-
+        
         $this->response->addVar('metaTitle', 'Administration');
-        $this->controller->render('administration/index', $params);
-        $this->printOut();
+        $this->response->render('administration/index', $params);
     }
 
     public function update($params = array())
     {
-        $id = $this->request->getParam('id', 'int');
-        
         // Update
         if ($this->request->isParam('sendNews')) {
-            $actualite = new Actualite();
-            $actualite->fill($this->request->getParams());
-            $actualite = $this->news->updateActualite($actualite);
-            $params['Actualite'] = $actualite;
+            $values = $this->news->prepareUpdate($this->request->getValues());
+            $id = $this->news->update($values);
             // Cache obsolete
             CacheManager::resetCache();
-            // Update parameter LastModificationActualites
-            if (false != ($data = file_get_contents(ParameterFilePath))) {
-                $toAdd = 'define(\'LastModificationActualites\', \'' . $actualite->getDateModif()->getTimestamp() . '\');';
-                if (preg_match('!define\(\'LastModificationActualites\', \'[0-9]*\'\);!i', $data)) {
-                    $data = preg_replace('!define\(\'LastModificationActualites\', \'[0-9]*\'\);!i', $toAdd, $data);
-                }
-                else {
-                    if (empty($data)) {
-                        $data = '<?php'."\n";
-                    }
-                    $data .= $toAdd;
-                }
-                file_put_contents(ParameterFilePath, $data);
-            }
-            // Send response
-            $message = new Message('Voilà une news ajoutée avec succès, bien joué !', OK);
-            $this->response->setFlash($message->toString());
-            $this->response->redirect('administration-update.html?id=' . $actualite->getId() . '#administrationPage');
+            $this->response->addFlash('Voilà une news ajoutée avec succès, bien joué !', OK);
+            $this->response->redirect('administration-update.html?id=' . $id . '#administrationPage');
         }
         
         // Display
+        $id = $this->request->getParam('id', 'int');
         if (0 == $id) {
             $params['Actualite'] = new Actualite();
         }
         else {
-            $params['Actualite'] = $this->news->findActualiteById($id);
+            $params['Actualite'] = $this->news->findActualiteById($id, true);
+            if (null == $params['Actualite']) {
+                $this->response->addFlash('La news ' . $id . ' n\'existe pas. Si c\'est un problème, il va falloir contacter un administrateur.', NEUTRE);
+                $this->response->redirect('administration.html');
+            }
         }
-        if (null == $params['Actualite']) {
-            $message = new Message('La news ' . $id . ' n\'existe pas. C\'est un problème ?', NEUTRE);
-            $this->response->setFlash($message->toString());
-            $this->response->redirect('administration.html');
-        }
-        $this->controller->render('administration/update', $params);
-        $this->printOut();
+        $this->response->render('administration/update', $params);
     }
 
     public function delete($params = array())
     {
         $id = $this->request->getParam('id', 'int');
-        if ($this->news->deleteActualite($id)) {
+        if ($this->news->remove($id)) {
             // Cache obsolete
             CacheManager::resetCache();
-            // Send response
-            $message = new Message('La news ' . $id . ' a été supprimée. Bien joué !', OK);
-            $this->response->setFlash($message->toString());
+            $this->response->addFlash('La news ' . $id . ' a été supprimée. Bien joué !', OK);
             $this->response->redirect('administration.html');
         }
-        $message = new Message('Arg, ça ne marche pas. La news ' . $id . ' n\'a pas été supprimée.', ERREUR);
-        $this->response->setFlash($message->toString());
+        $this->response->addFlash('Arg, ça ne marche pas. La news ' . $id . ' n\'a pas été supprimée.', ERREUR);
         $this->response->redirect('administration.html');
     }
 
     public function purgeCache()
     {
         CacheManager::resetCache(true);
-        $message = new Message('Cache supprimé ! On refait une partie de cache-cache ?', OK);
-        $this->response->setFlash($message->toString());
+        $this->response->addFlash('Cache supprimé ! On refait une partie de cache-cache ?', OK);
         $this->response->redirect('administration.html');
     }
 
@@ -110,19 +83,16 @@ class Admin extends Action
             if (null != $_POST['emailAdmin'] && NULL != $_POST['emailAdmin']) {
                 $data .= 'define(\'EmailAdmin\', \'' . parserS($_POST['emailAdmin']) . '\');' . "\n";
             }
-            $data .= 'define(\'LastModificationActualites\', \'' . LastModificationActualites . '\');' . "\n";
             $data .= "\n";
             
             if (false != file_put_contents(ParameterFilePath, $data)) {
-                $message = new Message('Paramètres bien enregistrés, super !', OK);
-                $this->response->setFlash($message->toString());
+                $this->response->addFlash('Paramètres bien enregistrés, super !', OK);
                 $this->response->redirect('administration.html');
             }
         }
         // Error
-        $message = new Message('Arg, impossible de mettre à jour les paramètres. Désolé, mais il va falloir en parler avec
+        $this->response->addFlash('Arg, impossible de mettre à jour les paramètres. Désolé, mais il va falloir en parler avec
 un administrateur.', ERREUR);
-        $this->response->setFlash($message->toString());
         $this->response->redirect('administration.html');
     }
 
@@ -135,17 +105,13 @@ un administrateur.', ERREUR);
             'gdj@cepsaintmaur.com',
             'musique@cepsaintmaur.com'
         );
-        // -- Prepare Meta Data
         $this->response->addVar('metaTitle', 'Administration - Gérer les listes de diffusion');
         
-        // -- Create params
         $tplPparams = array(
             'UrlCourant' => 'administration-listes-diffusion.html'
         );
         $tplPparams = array_merge($tplPparams, $params);
         
-        // -- Fill the body and print the page
-        $this->controller->render('administration/mailing', $tplPparams);
-        $this->printOut();
+        $this->response->render('administration/mailing', $tplPparams);
     }
 }

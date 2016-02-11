@@ -1,48 +1,49 @@
 <?php
 namespace Core;
 
-class Request
+use Pimple\Container;
+
+class Request extends Base
 {
 
-    protected $_route;
+    /**
+     * Pointer to PHP environment variables
+     *
+     * @access private
+     * @var array
+     */
+    private $server;
+    private $get;
+    private $post;
+    private $files;
+    private $cookies;
+    private $route;
 
-    protected $_params;
-
-    private static $_instance = null;
-
-    private function __construct()
-    {}
-
-    public static function getInstance()
+    /**
+     * Constructor
+     *
+     * @access public
+     * @param  \Pimple\Container   $container
+     */
+    public function __construct(Container $container, array $server = array(), array $get = array(), array $post = array(), array $files = array(), array $cookies = array())
     {
-        if (is_null(self::$_instance)) {
-            self::$_instance = new self();
-        }
-        return self::$_instance;
+        parent::__construct($container);
+        $this->server = empty($server) ? $_SERVER : $server;
+        $this->get = empty($get) ? $_GET : $get;
+        $this->post = empty($post) ? $_POST : $post;
+        $this->files = empty($files) ? $_FILES : $files;
+        $this->cookies = empty($cookies) ? $_COOKIE : $cookies;
     }
-
+    
     public function route($defaults = null)
     {
-        // $requestUri = substr($_SERVER['REQUEST_URI'],
-        // strpos($_SERVER['REQUEST_URI'],'/'.basename(__FILE__)) +
-        // strlen('/'.basename(__FILE__))
-        // );
-        // if (empty($requestUri)) {
-        // return array();
-        // }
-        
-        // $path = parse_url($requestUri, PHP_URL_PATH);
-        // preg_match('#^(/(?P<module>\w+))(/(?P<action>\w+)/?)?$#', $path, $matches);
-        
-        // $args = explode('&', parse_url($requestUri, PHP_URL_QUERY));
-        // $matches['args'] = $args;
         $module = getModule();
         $action = getAction();
-        $this->_route = array(
+        $this->route = array(
             'module' => (NULL != $module ? $module : $defaults['module']),
             'action' => (NULL != $action ? $action : $defaults['action'])
         );
-        return $this->_route;
+        return $this->route;
     }
 
     public function isParam($key, $value = NULL)
@@ -52,38 +53,43 @@ class Request
 
     public function getParam($key, $type = 'string')
     {
-        if (NULL != $this->getParams() && isset($this->_params[$key])) {
-            $var = $this->_params[$key];
-            if (0 == strcasecmp('int', $type) || 0 == strcasecmp('integer', $type)) {
+        $var = null;
+        if (! empty($this->get) && isset($this->get[$key])) {
+            $var = $this->get[$key];
+        }
+        else if (! empty($this->post) && isset($this->post[$key])) {
+            $var = $this->post[$key];
+        }
+        if (null != $var) {
+            if (startsWith($type, 'int')) {
                 return parserI($var);
             }
-            else 
-                if (0 == strcasecmp('float', $type) || 0 == strcasecmp('double', $type)) {
-                    return parserF($var);
-                }
+            if ('float' == $type || 'double' == $type) {
+                return parserF($var);
+            }
             return parserS($var);
         }
-        return NULL;
+        return null;
     }
 
     public function getRoute()
     {
-        return $this->_route;
+        return $this->route;
     }
 
     public function getModule()
     {
-        return $this->_route['module'];
+        return $this->route['module'];
     }
 
     public function getAction()
     {
-        return $this->_route['action'];
+        return $this->route['action'];
     }
 
-    public function setRoute($_route)
+    public function setRoute($route)
     {
-        $this->_route = $_route;
+        $this->route = $route;
     }
 
     public function getId()
@@ -91,18 +97,11 @@ class Request
         return getModule() . '_' . getAction() . '_' . (! empty($_SERVER["QUERY_STRING"]) ? '?' . $_SERVER["QUERY_STRING"] : '');
     }
 
-    public function getParams()
+    public function getValues()
     {
-        // Not yet computed: secure vars
-        if (NULL == $this->_params || count($this->_params) <= 0) {
-            $this->_params = array();
-            foreach ($_POST as $key => $val) {
-                $this->_params[$key] = parserGeneric($val);
-            }
-            foreach ($_GET as $key => $val) {
-                $this->_params[$key] = parserGeneric($val);
-            }
+        if (!empty($this->post)) {
+            return $this->post;
         }
-        return $this->_params;
+        return null;
     }
 }

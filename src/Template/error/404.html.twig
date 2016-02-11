@@ -1,6 +1,4 @@
-{# erreur/404 #}
-
-{% extends 'layout-base.tpl' %}
+{% extends 'base.html.twig' %}
 
 {% block content %}
 <article id="page404" class="page">
@@ -17,7 +15,7 @@
 		Vous trouverez peut-être votre bonheur à l'aide du <a href="sitemap.html">plan du site</a>.
 	</p> 
 	{% if Debug and error is defined %}
-		{% include 'error/error-debug.html.twig' %}
+		{% include 'helper/show-error.html.twig' %}
 	{% endif %}
 </article>
 {% endblock %}

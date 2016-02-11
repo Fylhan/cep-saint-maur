@@ -7,318 +7,123 @@ class Actualite
     /**
      *
      * @var integer
-     * @access public
      */
-    public $id;
+    private $id;
 
     /**
      *
      * @var string
-     * @access public
      */
-    public $titre;
+    private $titre;
 
     /**
      *
      * @var string
-     * @access public
      */
-    public $contenu;
+    private $contenu;
 
     /**
      *
      * @var string
-     * @access public
      */
-    public $extrait;
+    private $extrait;
 
     /**
      *
-     * @var string
-     * @access public
+     * @var int
      */
-    public $dateDebut;
+    private $dateDebut;
 
     /**
      *
-     * @var string
-     * @access public
+     * @var int
      */
-    protected $dateDebutString;
+    private $dateModif;
 
     /**
      *
-     * @var string
-     * @access public
+     * @var int
      */
-    public $dateModif;
-
-    /**
-     *
-     * @var string
-     * @access public
-     */
-    public $dateFin;
-
-    /**
-     *
-     * @var string
-     * @access public
-     */
-    protected $dateFinString;
+    private $dateFin;
 
     /**
      *
      * @var boolean
-     * @access public
      */
-    public $etat = 1;
-    
-    // -- Constructor
-    public function fill($params = array())
-    {
-        $this->id = isset($params['id']) ? $params['id'] : 0;
-        $this->titre = @$params['titre'];
-        $this->contenu = @$params['contenu'];
-        $this->dateDebut = isset($params['dateDebut']) ? \DateTime::createFromFormat('d/m/Y', $params['dateDebut']) : new \DateTime();
-        $this->dateModif = isset($params['dateModif']) ? \DateTime::createFromFormat('d/m/Y', $params['dateModif']) : new \DateTime();
-        if (isset($params['dateFin'])) {
-            $this->dateFin = \DateTime::createFromFormat('d/m/Y', $params['dateFin']);
-        }
-        else {
-            $this->dateFin = new \DateTime();
-            $this->dateFin->modify('+1 month');
-        }
-        $this->etat = isset($params['etat']) ? $params['etat'] : 0;
-    }
-    
-    // --- Get/Set
-    public function getId()
-    {
-        return $this->id;
-    }
+    private $etat;
 
-    public function setId($id)
+    public function __construct($params = array())
     {
-        $this->id = $id;
-    }
-
-    public function getTitre()
-    {
-        return $this->titre;
-    }
-
-    public function setTitre($titre)
-    {
-        $this->titre = $titre;
-    }
-
-    public function getContenu()
-    {
-        return $this->contenu;
-    }
-
-    public function setContenu($contenu)
-    {
-        $this->contenu = $contenu;
+        $this->id = isset($params['id']) ? intval($params['id']) : 0;
+        $this->titre = @$params['title'];
+        $this->contenu = @$params['content'];
+        $this->extrait = $this->computeExtrait();
+        $this->dateDebut = isset($params['date_start']) ? $params['date_start'] : time();
+        $this->dateModif = isset($params['date_update']) ? $params['date_update'] : time();
+        $this->dateFin = isset($params['date_end']) ? $params['date_end'] : time() + 3600 * 30;
+        $this->etat = isset($params['state']) ? intval($params['state']) : 0;
     }
 
     public function getExtrait()
     {
-        if (NULL == $this->extrait || '' == $this->extrait) {
+        if (empty($this->extrait)) {
             $this->computeExtrait();
         }
         return $this->extrait;
     }
 
-    public function setExtrait($extrait)
-    {
-        $this->extrait = $extrait;
-    }
-
     public function computeExtrait()
     {
-        // $pattern = '&lt;\!\-\-More\-\-&gt;';
         $pattern = '\[Lire la suite\]';
-        $this->extrait = preg_replace('!^(.*)(?:<br>)?\s*' . $pattern . '(.*)$!isU', '$1<br /><a href="evenement-' . $this->id . '.html" title="Lire la suite' . (NULL != $this->titre && NULL != $this->titre ? ' de &quot;' . str_replace('"', '&quot;', $this->titre) . '&quot;' : '') . '" class="liresuite">Lire la suite...</a></p>', $this->contenu);
+        $this->extrait = preg_replace('!^(.*)(?:<br>)?\s*' . $pattern . '(.*)$!isU', '$1<br /><a href="evenement-' . $this->id . '.html" title="Lire la suite' . (!empty($this->titre) ? ' de &quot;' . str_replace('"', '&quot;', $this->titre) . '&quot;' : '') . '" class="liresuite">Lire la suite...</a></p>', $this->contenu);
         $this->contenu = preg_replace('!^(.*)' . $pattern . '\s*(?:<br>)?(.*)$!is', '$1$2', $this->contenu);
     }
 
-    public function getDateDebut()
+    /**
+     *
+     * @return \DateTime
+     */
+    public function getDateTimeStart()
     {
         if (! ($this->dateDebut instanceof \DateTime)) {
-            if (NULL == $this->dateDebut || '' == $this->dateDebut) {
-                $dateDebut = new \DateTime();
+            if (empty($this->dateDebut)) {
+                return new \DateTime();
             }
-            else {
-                $dateDebut = \DateTime::createFromFormat('d/m/Y', $this->dateDebut);
-                if (! $dateDebut) {
-                    $dateDebut = \DateTime::createFromFormat('Y-m-d', $this->dateDebut);
-                }
-            }
-            $this->dateDebut = $dateDebut;
+            return new \DateTime('@' . $this->dateDebut);
         }
         return $this->dateDebut;
     }
 
-    public function setDateDebut($dateDebut)
-    {
-        if (! ($dateDebut instanceof \DateTime)) {
-            if (NULL == $dateDebut || '' == $dateDebut) {
-                $dateDebut = new \DateTime();
-            }
-            else {
-                $dateDebutTmp = \DateTime::createFromFormat('d/m/Y', $dateDebut);
-                if (! $dateDebutTmp) {
-                    $dateDebutTmp = \DateTime::createFromFormat('Y-m-d', $dateDebut);
-                }
-                $dateDebut = $dateDebutTmp;
-            }
-        }
-        $this->dateDebut = $dateDebut;
-    }
-
-    public function getDateDebutString()
-    {
-        if (NULL == $this->dateDebutString || '' == $this->dateDebutString) {
-            $this->dateDebutString = dateFr($this->getDateDebut()->getTimestamp(), false, true);
-        }
-        return $this->dateDebutString;
-    }
-
-    public function setDateDebutString($dateDebutString)
-    {
-        $this->dateDebutString = $dateDebutString;
-    }
-
-    public function getDateDebutSql()
-    {
-        return $this->getDateDebut()->format('Y-m-d');
-    }
-
-    public function getDateModif()
+    /**
+     *
+     * @return \DateTime
+     */
+    public function getDateTimeUpdate()
     {
         if (! ($this->dateModif instanceof \DateTime)) {
-            if (NULL == $this->dateModif || '' == $this->dateModif) {
-                $dateModif = new \DateTime();
+            if (empty($this->dateModif)) {
+                return new \DateTime();
             }
-            else {
-                $dateModif = \DateTime::createFromFormat('d/m/Y', $this->dateModif);
-                if (! $dateModif) {
-                    $dateModif = \DateTime::createFromFormat('Y-m-d', $this->dateModif);
-                }
-            }
-            $this->dateModif = $dateModif;
+            return new \DateTime('@' . $this->dateModif);
         }
         return $this->dateModif;
     }
 
-    public function setDateModif($dateModif)
-    {
-        if (! ($dateModif instanceof \DateTime)) {
-            if (NULL == $dateModif || '' == $dateModif) {
-                $dateModif = new \DateTime();
-            }
-            else {
-                $dateModifTmp = \DateTime::createFromFormat('d/m/Y', $dateModif);
-                if (! $dateModifTmp) {
-                    $dateModifTmp = \DateTime::createFromFormat('Y-m-d', $dateModif);
-                }
-                $dateModif = $dateModifTmp;
-            }
-        }
-        $this->dateModif = $dateModif;
-    }
-
-    public function getDateModifSql()
-    {
-        return $this->getDateModif()->format('Y-m-d');
-    }
-
-    public function getDateFin()
+    /**
+     *
+     * @return \DateTime
+     */
+    public function getDateTimeEnd()
     {
         if (! ($this->dateFin instanceof \DateTime)) {
-            if (NULL == $this->dateFin || '' == $this->dateFin) {
+            if (empty($this->dateFin)) {
                 $dateFin = new \DateTime();
                 $dateFin->modify('+1 month');
+                return $dateFin;
             }
-            else {
-                $dateFin = \DateTime::createFromFormat('d/m/Y', $this->dateFin);
-                if (! $dateFin) {
-                    $dateFin = \DateTime::createFromFormat('Y-m-d', $this->dateFin);
-                }
-            }
-            $this->dateFin = $dateFin;
+            return new \DateTime('@' . $this->dateFin);
         }
         return $this->dateFin;
-    }
-
-    public function setDateFin($dateFin)
-    {
-        if (! ($dateFin instanceof \DateTime)) {
-            if (NULL == $dateFin || '' == $dateFin) {
-                $dateFin = new \DateTime();
-            }
-            else {
-                $dateFinTmp = \DateTime::createFromFormat('d/m/Y', $dateFin);
-                if (! $dateFinTmp) {
-                    $dateFinTmp = \DateTime::createFromFormat('Y-m-d', $dateFin);
-                }
-                $dateFin = $dateFinTmp;
-            }
-        }
-        $this->dateFin = $dateFin;
-    }
-
-    public function getDateFinString()
-    {
-        if (NULL == $this->dateFinString || '' == $this->dateFinString) {
-            $this->dateFinString = dateFr($this->getDateFin()->getTimestamp(), false, false);
-        }
-        return $this->dateFinString;
-    }
-
-    public function setDateFinString($dateFinString)
-    {
-        $this->dateFinString = $dateFinString;
-    }
-
-    public function getDateFinSql()
-    {
-        return $this->getDateFin()->format('Y-m-d');
-    }
-
-    public function getEtat()
-    {
-        return $this->etat;
-    }
-
-    public function setEtat($etat)
-    {
-        $this->etat = $etat;
-    }
-
-    public function prepareToPrint()
-    {
-        $this->prepareToPrintForm();
-    }
-
-    public function prepareToPrintForm()
-    {
-        $this->id = parserI($this->id);
-        $this->titre = deparserS($this->titre);
-        $this->contenu = deparserS($this->contenu);
-        $this->extrait = deparserS($this->extrait);
-        $this->etat = parserI($this->etat);
-    }
-
-    public function prepareToSave()
-    {
-        $this->id = parserI($this->id);
-        $this->titre = parserS($this->titre);
-        $this->contenu = parserS($this->contenu);
-        $this->extrait = parserS($this->extrait);
-        $this->etat = parserI($this->etat);
     }
 
     public function toFeedItem($excerpt = false, $feedType = RSS2)
@@ -343,5 +148,87 @@ class Actualite
         ));
         return $newItem;
     }
+
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    public function setId($id)
+    {
+        $this->id = $id;
+        return $this;
+    }
+
+    public function getTitre()
+    {
+        return $this->titre;
+    }
+
+    public function setTitre($titre)
+    {
+        $this->titre = $titre;
+        return $this;
+    }
+
+    public function getContenu()
+    {
+        return $this->contenu;
+    }
+
+    public function setContenu($contenu)
+    {
+        $this->contenu = $contenu;
+        return $this;
+    }
+
+    public function setExtrait($extrait)
+    {
+        $this->extrait = $extrait;
+        return $this;
+    }
+
+    public function getDateDebut()
+    {
+        return $this->dateDebut;
+    }
+
+    public function setDateDebut($dateDebut)
+    {
+        $this->dateDebut = $dateDebut;
+        return $this;
+    }
+
+    public function getDateModif()
+    {
+        return $this->dateModif;
+    }
+
+    public function setDateModif($dateModif)
+    {
+        $this->dateModif = $dateModif;
+        return $this;
+    }
+
+    public function getDateFin()
+    {
+        return $this->dateFin;
+    }
+
+    public function setDateFin($dateFin)
+    {
+        $this->dateFin = $dateFin;
+        return $this;
+    }
+
+    public function getEtat()
+    {
+        return $this->etat;
+    }
+
+    public function setEtat($etat)
+    {
+        $this->etat = $etat;
+        return $this;
+    }
 }
-?>

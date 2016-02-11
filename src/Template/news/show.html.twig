@@ -1,4 +1,4 @@
-{% extends 'layout-base.tpl' %}
+{% extends 'base.html.twig' %}
 
 {% block content %}
 <article id="actualites" class="actualitesPage page">
@@ -9,7 +9,7 @@
 	<article class="actualite">
 	<header>
 		<h2><a href="evenement-{{actualite.id}}.html">{{actualite.titre}}</a></h2>
-		<p>{{actualite.dateDebutString|capitalize}}</p>
+		<p>{{actualite.dateTimeStart|date('d/m/Y')}}</p>
 	</header>
 	<div class="texte">{{actualite.contenu|raw}}</div>
 </article>

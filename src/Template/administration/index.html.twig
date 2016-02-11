@@ -19,7 +19,7 @@
 <p>A partir de cette interface, vous pouvez ajouter / modifier / supprimer les news s'affichant sur la <a href="{{ SitePath }}">page d'accueil</a>.</p>
 <p><a href="administration-update.html?update=0">Ajouter une news</a></p>
 
-{% include 'bloc/paginationHaut.tpl' %}
+{% include 'helper/paginator-top.html.twig' %}
 
 {% if actualites|length > 0 %}
 	<table class="liste">
@@ -39,10 +39,10 @@
 				{% else %}{{actualite.contenu|raw}}
 				{% endif %}
 			</td>
-			<td>Du {{actualite.dateDebut|date('d/m/Y')}}{% if null != actualite.dateFin and 0 != actualite.dateFin %} au {{actualite.dateFin|date('d/m/Y')}}{% endif %}</td>
+			<td>Du {{actualite.dateTimeStart|date('d/m/Y')}}{% if actualite.dateFin %} au {{actualite.dateTimeEnd|date('d/m/Y')}}{% endif %}</td>
 			<td>
-				{% if actualite.etat and "now"|date('Y-m-d') > actualite.dateFin|date('Y-m-d') %}terminé
-				{% elseif actualite.etat and "now"|date('Y-m-d') < actualite.dateDebut|date('Y-m-d') %}planifié
+				{% if actualite.etat and "now"|date('Y-m-d') > actualite.dateTimeEnd|date('Y-m-d') %}terminé
+				{% elseif actualite.etat and "now"|date('Y-m-d') < actualite.dateTimeStart|date('Y-m-d') %}planifié
 				{% elseif 2 == actualite.etat %}actif (invisible)
 				{% elseif actualite.etat %}actif
 				{% else %}désactivé
@@ -60,7 +60,7 @@
 	<p>Aucune "news" pour le moment.</p>
 {% endif %}
 
-{% include 'bloc/paginationBas.tpl' %}
+{% include 'helper/paginator-bottom.html.twig' %}
 
 <h2>Paramètres</h2>
 <p>Quelques paramêtre du sites sont configurables ci-dessous. Faites bien attention ;-)</p>
@@ -93,9 +93,6 @@
 		<input type="submit" name="sendData" id="sendData" value="Modifier" tabindex="{% set tabindex = tabindex+1 %}{{ tabindex }}" class="mini" />
 	</div>
 </form>
-
-<!-- <h2><a href="administration-listes-diffusion.html">Gérer les listes de discussion</a></h2>  -->
-
 
 {% endblock AdministrationBody %}
 

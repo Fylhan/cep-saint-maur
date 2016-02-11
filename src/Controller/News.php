@@ -12,30 +12,23 @@ class News extends Action
         $tplPparams = $this->news->getList(calculPage());
         $tplPparams['UrlTri'] = '';
         $tplPparams['UrlCourant'] = 'evenements.html';
-        $this->controller->getResponse()->addVar('metaTitle', 'Dernières nouvelles');
-        $this->controller->getResponse()->addVar('metaDesc', 'Dernières nouvelles');
-        $this->controller->getResponse()->addVar('metaKw', 'news, événements');
+        $this->response->addVar('metaTitle', 'Dernières nouvelles');
+        $this->response->addVar('metaDesc', 'Dernières nouvelles');
+        $this->response->addVar('metaKw', 'news, événements');
         
-        $this->controller->render('news/index', $tplPparams);
-        $this->printOut();
+        $this->response->render('news/index', $tplPparams);
     }
 
-    public function show($params = NULL)
+    public function show($params = array())
     {
-        $id = parserI($this->controller->getRequest()->getParam('id'));
-        $actualite = $this->news->findActualiteById($id, false);
+        $id = parserI($this->request->getParam('id'));
+        $news = $this->news->findActualiteById($id, false);
         
-        if (NULL != $actualite) {
-            // -- Create params
-            $actualite->computeExtrait();
-            $tplPparams = array(
-                'actualite' => $actualite
-            );
-            
-            // -- Prepare Meta Data
-            $this->controller->getResponse()->addVar('metaTitle', $actualite->getTitre());
-            $this->controller->getResponse()->addVar('metaDesc', 'Dernières nouvelles : ' + $actualite->getTitre());
-            $this->controller->getResponse()->addVar('metaKw', 'news');
+        if (NULL != $news) {
+            $params['actualite'] = $news;
+            $this->response->addVar('metaTitle', $news->getTitre());
+            $this->response->addVar('metaDesc', 'Dernières nouvelles : ' + $news->getTitre());
+            $this->response->addVar('metaKw', 'news');
         }
         // 404
         else {
@@ -43,8 +36,6 @@ class News extends Action
             $e->setPage('d\'actualité ' . $id);
             throw $e;
         }
-        // -- Fill the body and print the page
-        $this->controller->render('news/show', $tplPparams);
-        $this->printOut();
+        $this->response->render('news/show', $params);
     }
 }

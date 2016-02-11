@@ -37,8 +37,8 @@ class Upload extends Action
                     'title' => $fileInfo['title']
                 );
             }
-            $this->controller->getResponse()->setBody(stripslashes(json_encode($toDisplay)));
-            $this->printOut();
+            $this->response->setBody(stripslashes(json_encode($toDisplay)));
+            $this->response->printOut();
         }
     }
 
@@ -77,20 +77,25 @@ class Upload extends Action
                     'title' => $fileUpload['title']
                 );
             }
-            $this->controller->getResponse()->setBody(stripslashes(json_encode($toDisplay)));
-            $this->printOut();
+            $this->response->setBody(stripslashes(json_encode($toDisplay)));
+            $this->response->printOut();
         }
     }
 
     public function galery($params = array())
     {
-        // -- Header
-        $this->controller->getResponse()->addHeader('Cache-Control', 'no-cache, must-revalidate');
-        $this->controller->getResponse()->addHeader('Expires', 'Sat, 29 Oct 2011 13:00:00 GMT+1'); // A date in the past
-        $this->controller->getResponse()->addHeader('Content-type', 'application/json; charset=UTF-8');
-        // -- Display content
+        $type = $this->request->getParam('type', 'string');
+
         $data = file_get_contents(GaleryFilePath);
-        $this->controller->getResponse()->setBody(false != $data ? $data : '');
-        $this->printOut();
+        if ('human' == $type) {
+            $this->response->render('upload/galery', json_decode($data));
+        }
+        else {
+            $this->response->addHeader('Cache-Control', 'no-cache, must-revalidate');
+            $this->response->addHeader('Expires', 'Sat, 29 Oct 2011 13:00:00 GMT+1'); // A date in the past
+            $this->response->addHeader('Content-type', 'application/json; charset=UTF-8');
+            $this->response->setBody(false != $data ? $data : '');
+            $this->response->printOut();
+        }
     }
 }

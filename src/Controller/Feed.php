@@ -36,7 +36,6 @@ class Feed extends Action
         header("Content-Type: " . $contentType);
         // Feed
         echo $params['feedData'];
-        $this->printOut();
+        $this->response->printOut();
     }
 }
-?>
