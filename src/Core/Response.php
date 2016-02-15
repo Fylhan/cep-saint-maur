@@ -49,7 +49,7 @@ class Response extends Base
             'ThemePath' => DEFAULT_THEME_PATH,
             'ImgPath' => DEFAULT_THEME_PATH . '/img/',
             'LibPath' => INCLUDE_PATH . '/lib',
-            'IllustrationPath' => ILLUSTRATION_PATH . '/',
+            'UploadPath' => UploadDir,
             'CurrentPath' => getCurrentPage(),
             'FeedPath' => FEED_PATH,
             'Locale' => getLocale(),
@@ -95,6 +95,21 @@ class Response extends Base
         $body = $tpl->render($this->response->getVars());
         $this->setBody($body);
         
+        $this->printOut();
+        exit();
+    }
+    
+    /**
+     * 
+     * @param $data Array for JSON or string or anything else
+     * @param string $type JSON by default
+     */
+    public function renderData($data, $type='json')
+    {
+        $this->addHeader('Cache-Control', 'no-cache, must-revalidate');
+        $this->addHeader('Expires', 'Sat, 29 Oct 2011 13:00:00 GMT+1'); // A date in the past
+        $this->addHeader('Content-type', 'application/'.$type.'; charset=UTF-8');
+        $this->setBody('json' === $type ? json_encode($data) : $data);
         $this->printOut();
         exit();
     }

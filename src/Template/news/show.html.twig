@@ -4,14 +4,14 @@
 <article id="actualites" class="actualitesPage page">
 	<header>
 		<h1><a href="evenements.html">Dernières Nouvelles</a></h1>
+    	<p>&raquo; <a href="evenements.html">Voir les autres événements</a></p>
 	</header>
-	
 	<article class="actualite">
 	<header>
-		<h2><a href="evenement-{{actualite.id}}.html">{{actualite.titre}}</a></h2>
+		<h2>{{actualite.titre}}</h2>
 		<p>{{actualite.dateTimeStart|date('d/m/Y')}}</p>
 	</header>
 	<div class="texte">{{actualite.contenu|raw}}</div>
-</article>
+	<div style="clear: both;"></div>
 </article>
 {% endblock content %}

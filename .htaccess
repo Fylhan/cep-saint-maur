@@ -28,8 +28,10 @@ RewriteRule ^administration-delete.html$ index.php?module=admin&action=delete [L
 RewriteRule ^administration-data.html$ index.php?module=admin&action=updateData [L,QSA]
 RewriteRule ^administration-purge.html$ index.php?module=admin&action=purgeCache [L,QSA]
 RewriteRule ^administration-mailing.html$ index.php?module=admin&action=mailing&page=$1 [L,QSA]
+RewriteRule ^upload.html$ index.php?module=upload&action=upload [L,QSA]
 RewriteRule ^upload-picture.html$ index.php?module=upload&action=picture [L,QSA]
 RewriteRule ^upload-file.html$ index.php?module=upload&action=file [L,QSA]
+RewriteRule ^galery.html$ index.php?module=upload&action=galery&type=human [L,QSA]
 RewriteRule ^galery.json$ index.php?module=upload&action=galery [L,QSA]
 
 RewriteRule ^(.*).html$ index.php?module=error&action=$1 [L,QSA]

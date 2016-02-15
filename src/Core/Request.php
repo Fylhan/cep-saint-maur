@@ -51,7 +51,7 @@ class Request extends Base
         return (NULL != $this->getParam($key) && (NULL == $value || $value == $this->getParam($key)));
     }
 
-    public function getParam($key, $type = 'string')
+    public function getParam($key, $type = 'string', $defaultValue='')
     {
         $var = null;
         if (! empty($this->get) && isset($this->get[$key])) {
@@ -69,7 +69,7 @@ class Request extends Base
             }
             return parserS($var);
         }
-        return null;
+        return $defaultValue;
     }
 
     public function getRoute()

@@ -35,7 +35,7 @@ defined('GaleryFilePath') or define('GaleryFilePath', CACHE_PATH . '/galery.json
 
 // Database
 defined('DB_DRIVER') or define("DB_DRIVER", 'sqlite');
-defined('DB_FILENAME') or define('DB_FILENAME', DATA_PATH.'/db.sqlite'); // Sqlite configuration
+defined('DB_FILENAME') or define('DB_FILENAME', DATA_PATH . '/db.sqlite'); // Sqlite configuration
 defined('DB_USERNAME') or define('DB_USERNAME', 'root');
 defined('DB_PASSWORD') or define('DB_PASSWORD', 'root');
 defined('DB_HOSTNAME') or define('DB_HOSTNAME', 'localhost');
@@ -73,6 +73,8 @@ defined('SessionTimeoutKeepConnected') or define('SessionTimeoutKeepConnected', 
 defined('SessionTimeoutNormal') or define('SessionTimeoutNormal', 60 * 60 * 2); // 2 hours
 defined('LoginTryNumber') or define('LoginTryNumber', 5); // 2 hours
 defined('LoginBanishedTimeout') or define('LoginBanishedTimeout', 30 * 60); // 30 min
+defined('ThumbWidth') or define('ThumbWidth', 200);
+defined('ThumbHeight') or define('ThumbHeight', 200);
 defined('CacheEnabled') or define('CacheEnabled', ! DEBUG);
 defined('CompressionEnabled') or define('CompressionEnabled', false);
 

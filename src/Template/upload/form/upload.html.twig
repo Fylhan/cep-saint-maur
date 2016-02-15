@@ -1,0 +1,9 @@
+<h2>Téléverser un nouveau fichier
+</h2><form action="upload.html?type=human" enctype="multipart/form-data" method="POST">
+	<div>
+		<input type="file" name="file" id="file" />
+	</div>
+	<div class="formEnd">
+		<input type="submit" name="sendFile" id="sendFile" value="Envoyer" tabindex="{% set tabindex = tabindex+1 %}{{ tabindex }}" class="mini" />
+	</div>
+</form>

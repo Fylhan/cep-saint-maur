@@ -11,7 +11,9 @@ use Pimple\Container;
  * @property \Core\Response                               $response
  * @property \Core\Router                                 $router
  * @property \Model\News                                  $news
+ * @property \Model\Upload                                $upload
  * @property \PicoDb\Database                             $db
+ * @property \Service\Uploader                            $uploader
  * @property \Twig_Environment                            $template
  */
 abstract class Base

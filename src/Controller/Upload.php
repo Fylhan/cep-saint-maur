@@ -2,100 +2,90 @@
 namespace Controller;
 
 use Core\Action;
-use Service\FileUploader;
 
 class Upload extends Action
 {
 
-    public function file($params = array())
+    const AcceptedTypesFile = array(
+        'txt' => 'text/plain',
+        'zip' => 'application/zip',
+        'mp3' => 'audio/mpeg',
+        'qt' => 'video/quicktime',
+        'mov' => 'video/quicktime',
+        'pdf' => 'application/pdf',
+        'doc' => 'application/msword',
+        'docx' => 'application/msword',
+        'xls' => 'application/vnd.ms-excel',
+        'xlsx' => 'application/vnd.ms-excel',
+        'ppt' => 'application/vnd.ms-powerpoint',
+        'pptx' => 'application/vnd.ms-powerpoint',
+        'odt' => 'application/vnd.oasis.opendocument.text',
+        'ods' => 'application/vnd.oasis.opendocument.spreadsheet',
+        'odp' => 'application/vnd.oasis.opendocument.presentation'
+    );
+
+    const AcceptedTypesPicture = array(
+        'jpg' => 'image/jpeg',
+        'jpeg' => 'image/jpeg',
+        'png' => 'image/png',
+        'gif' => 'image/gif',
+        'svg' => 'image/svg'
+    );
+
+    public function file()
     {
-        if (isset($_FILES['file']) && NULL != $_FILES['file'] && '' != $_FILES['file']) {
-            // -- Load fileUploader
-            $acceptedTypes = array(
-                'txt' => 'text/plain',
-                'zip' => 'application/zip',
-                'mp3' => 'audio/mpeg',
-                'qt' => 'video/quicktime',
-                'mov' => 'video/quicktime',
-                'pdf' => 'application/pdf',
-                'doc' => 'application/msword',
-                'rtf' => 'application/rtf',
-                'xls' => 'application/vnd.ms-excel',
-                'ppt' => 'application/vnd.ms-powerpoint',
-                'odt' => 'application/vnd.oasis.opendocument.text',
-                'ods' => 'application/vnd.oasis.opendocument.spreadsheet'
-            );
-            $fileUpload = new FileUploader(UploadDir, $acceptedTypes);
-            
-            // -- Upload
-            $fileInfo = $fileUpload->upload($_FILES['file']);
-            // -- Fill the body and print the page
-            $toDisplay = $fileInfo;
-            if (NULL != $fileInfo && $fileInfo['ack']) {
-                $toDisplay = array(
-                    'filelink' => $fileInfo['dir'] . $fileInfo['name'],
-                    'title' => $fileInfo['title']
-                );
-            }
-            $this->response->setBody(stripslashes(json_encode($toDisplay)));
-            $this->response->printOut();
-        }
+        return $this->upload(self::AcceptedTypesFile);
     }
 
-    public function picture($params = array())
+    public function picture()
     {
-        if (isset($_FILES['file']) && NULL != $_FILES['file'] && '' != $_FILES['file']) {
-            // -- Load fileUploader
-            $acceptedMimeTypes = array(
-                'image/png',
-                'image/jpg',
-                'image/gif',
-                'image/jpeg',
-                'image/pjpeg'
-            );
-            $acceptedExtensionTypes = array(
-                'png',
-                'jpg',
-                'gif',
-                'jpeg',
-                'pjpeg'
-            );
-            
-            $fileUpload = new FileUploader(UploadDir, $acceptedMimeTypes, $acceptedExtensionTypes);
-            
-            // -- Upload
-            $fileInfo = $fileUpload->upload($_FILES['file']);
-            if (NULL != $fileInfo && $fileInfo['ack']) {
-                // Manage gallery
-                $fileUpload->addToGallery($fileInfo);
-            }
-            
-            $toDisplay = $fileUpload;
-            if (NULL != $fileUpload && $fileUpload['ack']) {
-                $toDisplay = array(
-                    'filelink' => $fileUpload['dir'] . $fileUpload['name'],
-                    'title' => $fileUpload['title']
-                );
-            }
-            $this->response->setBody(stripslashes(json_encode($toDisplay)));
-            $this->response->printOut();
+        return $this->upload(self::AcceptedTypesPicture);
+    }
+
+    public function upload($acceptedTypes = array())
+    {
+        if (empty($acceptedTypes)) {
+            $acceptedTypes = array_merge(self::AcceptedTypesFile, self::AcceptedTypesPicture);
         }
+        $type = $this->request->getParam('type', 'string');
+        
+        if (isset($_FILES['file']) && NULL != $_FILES['file'] && '' != $_FILES['file']) {
+            $fileInfo = $this->uploader->upload($_FILES['file'], $acceptedTypes);
+            if (false !== $fileInfo) {
+                $this->upload->update($fileInfo);
+            }
+            
+            if ('human' == $type) {
+                $this->response->addFlash('Fichier téléversé avec succès.', OK);
+                $this->response->redirect('galery.html');
+            }
+            $params = array();
+            if (false !== $fileInfo) {
+                $params['filelink'] = UploadDir . $fileInfo['image'];
+                $params['title'] = $fileInfo['title'];
+            }
+            $this->response->renderData($params);
+        }
+        
+        $this->response->addFlash('Erreur durant le téléversage du fichier.', ERREUR);
+        $this->response->redirect('galery.html');
     }
 
     public function galery($params = array())
     {
         $type = $this->request->getParam('type', 'string');
-
-        $data = file_get_contents(GaleryFilePath);
+        
+        $images = $this->upload->getAll();
+        
         if ('human' == $type) {
-            $this->response->render('upload/galery', json_decode($data));
+            $this->response->render('upload/galery', array(
+                'images' => $images
+            ));
         }
-        else {
-            $this->response->addHeader('Cache-Control', 'no-cache, must-revalidate');
-            $this->response->addHeader('Expires', 'Sat, 29 Oct 2011 13:00:00 GMT+1'); // A date in the past
-            $this->response->addHeader('Content-type', 'application/json; charset=UTF-8');
-            $this->response->setBody(false != $data ? $data : '');
-            $this->response->printOut();
+        foreach ($images as $k => $image) {
+            $images[$k]['image'] = UploadDir . $image['image'];
+            $images[$k]['thumb'] = UploadDir . $image['thumb'];
         }
+        $this->response->renderData($images);
     }
 }
