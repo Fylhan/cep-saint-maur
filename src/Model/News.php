@@ -1,9 +1,10 @@
 <?php
 namespace Model;
 
+use Core\DAOException;
+use DateTime;
 use Model\Actualite;
 use PicoDb\Table;
-use Core\DAOException;
 
 class News extends Base implements ActualiteDAO
 {
@@ -17,7 +18,7 @@ class News extends Base implements ActualiteDAO
 
     public function query($disabled = false)
     {
-        $query = $this->db->table(self::TABLE)->columns('id', 'title', 'content', 'content_excerpt', 'date_start', 'date_update', 'date_end', 'state');
+        $query = $this->db->table(self::TABLE)->columns('id', 'title', 'content', 'date_start', 'date_update', 'date_end', 'state');
         if (! $disabled) {
             $query->eq('state', 1)
                 ->gte('date_end', time())
@@ -80,6 +81,44 @@ class News extends Base implements ActualiteDAO
             ->findAll();
     }
 
+    public function getAllForFeeds($limit, $excerpt, $feedType)
+    {
+        $news = $this->query(false)
+            ->orderBy('date_start', Table::SORT_DESC)
+            ->offset(0)
+            ->limit($limit)
+            ->findAll();
+        $feeds = array();
+        foreach ($news as $element) {
+            $newItem = new \FeedItem($feedType);
+            $newItem->setTitle($element['title']);
+            $newItem->setLink(SITE_PATH . 'evenement-' . $element['id'] . '.html');
+            $newItem->setDate($element['date_start']);
+            $element = array_merge($element, $this->computeExceprt($element));
+            if ($excerpt) {
+                $element['excerpt'] = preg_replace('!<a href="([^h].+)"!iU', '<a href="' . SITE_PATH . '$1"', $element['excerpt']);
+            }
+            $newItem->setDescription($excerpt ? $element['excerpt'] : $element['content']);
+            $newItem->addElement('author', 'CEP Saint-Maur');
+            $newItem->addElement('guid', SITE_PATH . 'actualite-' . $element['id'] . '.html', array(
+                'isPermaLink' => 'true'
+            ));
+            $feeds[] = $newItem;
+        }
+        return $feeds;
+    }
+
+    public function computeExceprt($news)
+    {
+        $pattern = '\[Lire la suite\]';
+        $excerpt = preg_replace('!^(.*)(?:<br>)?\s*' . $pattern . '(.*)$!isU', '$1<br /><a href="evenement-' . $news['id'] . '.html" title="Lire la suite' . (! empty($news['title']) ? ' de &quot;' . str_replace('"', '&quot;', $news['title']) . '&quot;' : '') . '" class="liresuite">Lire la suite...</a></p>', $news['content']);
+        $content = preg_replace('!^(.*)' . $pattern . '\s*(?:<br>)?(.*)$!is', '$1$2', $news['content']);
+        return array(
+            'content' => $content,
+            'excerpt' => $excerpt
+        );
+    }
+
     /**
      * Prepare data to be stored on db
      *
@@ -90,9 +129,9 @@ class News extends Base implements ActualiteDAO
     public function prepareUpdate(array $values)
     {
         $values['id'] = intval(@$values['id']);
-        $values['date_start'] = isset($values['date_start']) ? strtotime($values['date_start']) : time();
+        $values['date_start'] = isset($values['date_start']) ? DateTime::createFromFormat('d/m/Y', $values['date_start'])->getTimestamp() : time();
         $values['date_update'] = time();
-        $values['date_end'] = isset($values['date_end']) ? strtotime($values['date_end']) : time() + 3600 * 30; // +1 month
+        $values['date_end'] = isset($values['date_end']) ? DateTime::createFromFormat('d/m/Y', $values['date_end'])->getTimestamp() : time() + 3600 * 30; // +1 month
         $values['state'] = intval(@$values['state']);
         unset($values['sendNews']);
         return $values;
@@ -153,12 +192,6 @@ class News extends Base implements ActualiteDAO
         $nbElement = $this->calculNbActualites($admin);
         $nbPage = calculNbPage($nbPerPage, $nbElement);
         $actualites = $this->findActualites($page, $admin, $nbPerPage, $admin);
-        if (NULL != $actualites && count($actualites) > 0) {
-            foreach ($actualites as $actualite) {
-                $actualite->computeExtrait();
-            }
-        }
-        
         $params = array(
             'actualites' => $actualites,
             'nbPage' => $nbPage,
@@ -177,6 +210,7 @@ class News extends Base implements ActualiteDAO
             ->eq('id', $id)
             ->findOne();
         if (null != $data) {
+            $data = array_merge($data, $this->computeExceprt($data));
             $data = new Actualite($data);
         }
         return $data;
@@ -188,6 +222,7 @@ class News extends Base implements ActualiteDAO
         $news = array();
         if (! empty($data)) {
             foreach ($data as $params) {
+                $params = array_merge($params, $this->computeExceprt($params));
                 $news[] = new Actualite($params);
             }
         }
@@ -200,6 +235,7 @@ class News extends Base implements ActualiteDAO
         $news = array();
         if (! empty($data)) {
             foreach ($data as $params) {
+                $params = array_merge($params, $this->computeExceprt($params));
                 $news[] = new Actualite($params);
             }
         }

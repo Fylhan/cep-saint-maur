@@ -2,40 +2,31 @@
 namespace Controller;
 
 use Core\Action;
-use Service\FeedUpdater;
 
 class Feed extends Action
 {
 
-    public function index($params = NULL)
+    public function index($params = array())
     {
-        // -- Retrieve feed parameters
-        $params['feedType'] = RSS2;
         $feedTypes = array(
             RSS1 => 'rss1',
             RSS2 => 'rss2',
             ATOM => 'atom'
         );
-        if (isset($_GET['feed']) && NULL != $_GET['feed'] && "" != $_GET['feed'] && in_array($_GET['feed'], $feedTypes)) {
-            $params['feedType'] = array_search($_GET['feed'], $feedTypes);
-        }
-        $excerpt = parserI(@$_GET['excerpt']);
+        $feedType = array_search($this->request->getParam('feed', 'string', 'rss2'), $feedTypes);
+        $excerpt = $this->request->getParam('excerpt', 'int');
         
         // -- Generate the Feed
-        $feedUpdater = new FeedUpdater($this->news);
-        $params['feedData'] = $feedUpdater->updateActualitesFeed($excerpt, $params['feedType']);
+        $items = $this->news->getAllForFeeds(NbItemPerFeed, $excerpt, $feedType);
+        $data = $this->feeder->generateFeed($items, $feedType);
         
-        $contentType = "application/rss+xml";
-        if (RSS1 == $params['feedType']) {
-            $contentType = "application/rdf+xml";
+        $contentType = "rss+xml";
+        if (RSS1 == $feedType) {
+            $contentType = "rdf+xml";
         }
-        else 
-            if (ATOM == $params['feedType']) {
-                $contentType = "application/atom+xml";
-            }
-        header("Content-Type: " . $contentType);
-        // Feed
-        echo $params['feedData'];
-        $this->response->printOut();
+        elseif (ATOM == $feedType) {
+            $contentType = "atom+xml";
+        }
+        $this->response->renderData($data, $contentType);
     }
 }

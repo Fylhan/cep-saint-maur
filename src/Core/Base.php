@@ -14,6 +14,7 @@ use Pimple\Container;
  * @property \Model\Upload                                $upload
  * @property \PicoDb\Database                             $db
  * @property \Service\Uploader                            $uploader
+ * @property \Service\Feeder                              $feeder
  * @property \Twig_Environment                            $template
  */
 abstract class Base

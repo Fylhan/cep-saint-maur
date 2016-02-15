@@ -57,7 +57,7 @@ class Actualite
         $this->id = isset($params['id']) ? intval($params['id']) : 0;
         $this->titre = @$params['title'];
         $this->contenu = @$params['content'];
-        $this->extrait = $this->computeExtrait();
+        $this->extrait = @$params['excerpt'];
         $this->dateDebut = isset($params['date_start']) ? $params['date_start'] : time();
         $this->dateModif = isset($params['date_update']) ? $params['date_update'] : time();
         $this->dateFin = isset($params['date_end']) ? $params['date_end'] : time() + 3600 * 30;
@@ -66,17 +66,7 @@ class Actualite
 
     public function getExtrait()
     {
-        if (empty($this->extrait)) {
-            $this->computeExtrait();
-        }
         return $this->extrait;
-    }
-
-    public function computeExtrait()
-    {
-        $pattern = '\[Lire la suite\]';
-        $this->extrait = preg_replace('!^(.*)(?:<br>)?\s*' . $pattern . '(.*)$!isU', '$1<br /><a href="evenement-' . $this->id . '.html" title="Lire la suite' . (!empty($this->titre) ? ' de &quot;' . str_replace('"', '&quot;', $this->titre) . '&quot;' : '') . '" class="liresuite">Lire la suite...</a></p>', $this->contenu);
-        $this->contenu = preg_replace('!^(.*)' . $pattern . '\s*(?:<br>)?(.*)$!is', '$1$2', $this->contenu);
     }
 
     /**
@@ -124,29 +114,6 @@ class Actualite
             return new \DateTime('@' . $this->dateFin);
         }
         return $this->dateFin;
-    }
-
-    public function toFeedItem($excerpt = false, $feedType = RSS2)
-    {
-        $newItem = new \FeedItem($feedType);
-        $newItem->setTitle($this->getTitre());
-        $newItem->setLink(SITE_PATH . 'actualite-' . $this->getId() . '.html');
-        $newItem->setDate($this->getDateDebut());
-        $this->computeExtrait();
-        $content = '';
-        if ($excerpt) {
-            $content = $this->getExtrait();
-        }
-        else {
-            $content = $this->getContenu();
-        }
-        $content = preg_replace('!<a href="([^h].+)"!iU', '<a href="' . SITE_PATH . '$1"', $content);
-        $newItem->setDescription($content);
-        $newItem->addElement('author', 'CEP Saint-Maur');
-        $newItem->addElement('guid', SITE_PATH . 'actualite-' . $this->getId() . '.html', array(
-            'isPermaLink' => 'true'
-        ));
-        return $newItem;
     }
 
     public function getId()
