@@ -1,0 +1,9 @@
+filter:
+    paths:
+        - src/*
+    excluded_paths:
+        - src/Schema/*
+        - src/Template/*
+        - src/Library/*
+        - src/Service/SitemapGenerator/*
+        - src/config-defaults.php
