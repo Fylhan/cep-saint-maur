@@ -13,7 +13,7 @@ class Feeder extends Base
         $feed->setTitle(SiteNom);
         $feed->setLink(SITE_PATH);
         $feed->setDescription(SiteDesc);
-        $feedImgUrl = ILLUSTRATION_PATH . '/cepsaintmaur.png';
+        $feedImgUrl = IMG_PATH . '/cepsaintmaur.png';
         $feed->setImage(SiteNom, SITE_PATH, $feedImgUrl); // Image title and link must match with the 'title' and 'link' channel elements for RSS 2.0
         $feed->setChannelElement('language', DefaultLocale);
         $feed->setChannelElement('copyright', SITE_PATH);

@@ -1,4 +1,4 @@
-{% extends 'administration/layout.html.twig' %}
+{% extends 'admin/layout.html.twig' %}
 
 {% block SubTitle %}
  - Galerie
@@ -8,8 +8,8 @@
 {{ FlashMessage|raw }}
 
 {% for image in images %}
-    <a href="{{UploadPath}}{{ image.image }}" title="{{ image.title }}">
-        <img src="{{UploadPath}}{{ image.thumb }}" alt="{{ image.title }}" />
+    <a href="{{ image.image }}" title="{{ image.title }}">
+        <img src="{{ image.thumb }}" alt="{{ image.title }}" width="{{ image.width }}" height="{{ image.height }}"/>
     </a>
 {% else %}
 Il n'y a aucun fichier pour l'instant.

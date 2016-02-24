@@ -1,4 +1,4 @@
-var mapLoader = $('<img>').addClass('loader').attr('src', '{{ThemePath}}/img/loader.gif').attr('alt', 'Chargement...');
+var mapLoader = $('<img>').addClass('loader').attr('src', 'assets/img/loader.gif').attr('alt', 'Chargement...');
 var mapLoaded = false;
 function initMap(mapId) {
 	// -- Prepare the Map Center Position (same as marker position)
@@ -10,7 +10,7 @@ function initMap(mapId) {
 	//	-- Prepare the marker
 	var marker = new OpenLayers.Layer.Vector('Overlay', {
 		styleMap: new OpenLayers.StyleMap({
-			externalGraphic: '{{ThemePath}}/img/marker.png',
+			externalGraphic: 'assets/img/marker.png',
 			graphicWidth: 20, graphicHeight: 24, graphicYOffset: -24
 		})
 	});
@@ -34,7 +34,7 @@ $(document).ready(function(){
 			// Load the map
 			if (!mapLoaded) {
 				mapLoader.insertBefore('#map');
-				$.getScript('{{ThemePath}}/js/openlayers.js', function() {
+				$.getScript('assets/js/openlayers.js', function() {
 					initMap('map');
 					mapLoader.hide();
 				}, function() {

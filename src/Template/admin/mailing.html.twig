@@ -1,4 +1,4 @@
-{% extends 'administration/layout.html.twig' %}
+{% extends 'admin/layout.html.twig' %}
 
 {% block AdministrationBody %}
 <aside class="conseil">
@@ -17,7 +17,6 @@ Quelques limitations :</p>
 </ul></div>
 </aside>
 
-{{ Message|raw }}
 {{ FlashMessage|raw }}
 
 <form action="http://kundenserver.de/cgi-bin/mailinglist.cgi" method="POST">
@@ -58,7 +57,7 @@ Quelques limitations :</p>
 {% endblock AdministrationBody %}
 
 {% block js %}
-<script type="text/javascript" src="{{ThemePath}}/js/jquery.min.js"></script>
+<script type="text/javascript" src="{{JsPath}}jquery.min.js"></script>
 <script type="text/javascript">
 $(function(){
 	// -- Conseil

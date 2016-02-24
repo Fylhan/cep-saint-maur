@@ -6,7 +6,7 @@ use DateTime;
 use Model\Actualite;
 use PicoDb\Table;
 
-class News extends Base implements ActualiteDAO
+class News extends Base
 {
 
     /**
@@ -114,6 +114,7 @@ class News extends Base implements ActualiteDAO
         $excerpt = preg_replace('!^(.*)(?:<br>)?\s*' . $pattern . '(.*)$!isU', '$1<br /><a href="evenement-' . $news['id'] . '.html" title="Lire la suite' . (! empty($news['title']) ? ' de &quot;' . str_replace('"', '&quot;', $news['title']) . '&quot;' : '') . '" class="liresuite">Lire la suite...</a></p>', $news['content']);
         $content = preg_replace('!^(.*)' . $pattern . '\s*(?:<br>)?(.*)$!is', '$1$2', $news['content']);
         return array(
+            'content_raw' => $news['content'],
             'content' => $content,
             'excerpt' => $excerpt
         );

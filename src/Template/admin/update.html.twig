@@ -1,17 +1,10 @@
-{% extends 'administration/layout.html.twig' %}
-
-{% block css %}
-{{ parent() }}
-<link rel="stylesheet" href="{{ThemePath}}/css/redactor.min.css" />
-<link type="text/css" rel="stylesheet" href="{{ThemePath}}/css/ui-lightness/jquery-ui.min.css" />
-{% endblock css %}
+{% extends 'admin/layout.html.twig' %}
 
 {% block SubTitle %}
  - {% if 0 == Actualite.id %}Ajouter{% else %}Modifier{% endif %} une news
 {% endblock %}
 
 {% block AdministrationBody %}
-{{ Message|raw }}
 {{ FlashMessage|raw }}
 <p><a href="administration.html">Administration</a> > {% if 0 == Actualite.id %}Ajouter{% else %}Modifier{% endif %} une news</p>
 <aside class="conseil">
@@ -29,13 +22,13 @@
 	</div>
 	<div>
 		<label for="content" class="requis">Contenu</label>
-			<textarea name="content" id="content" rows="25" class="editor" placeholder="Si vous avez quelque chose à nous dire, c'est ici !" tabindex="{% set tabindex = tabindex+1 %}{{ tabindex }}">{{Actualite.contenu}}</textarea>
+			<textarea name="content" id="content" rows="25" class="editor" placeholder="Si vous avez quelque chose à nous dire, c'est ici !" tabindex="{% set tabindex = tabindex+1 %}{{ tabindex }}">{{Actualite.contentRaw}}</textarea>
 	</div>
 	<div>
-		<label for="date_start">Date de début de l'affichage</label>
+		<label for="date_start">Date de début<br />de l'affichage</label>
 			<input type="date" name="date_start" id="date_start" value="{{Actualite.dateTimeStart|date('d/m/Y')}}" tabindex="{% set tabindex = tabindex+1 %}{{ tabindex }}" />
 	
-		<label for="date_end">Date de fin de l'affichage</label>
+		<label for="date_end">Date de fin<br />de l'affichage</label>
 			<input type="date" name="date_end" id="date_end" value="{{Actualite.dateTimeEnd|date('d/m/Y')}}" tabindex="{% set tabindex = tabindex+1 %}{{ tabindex }}" />
 	</div>
 	<div>
@@ -54,13 +47,20 @@
 
 {% endblock %}
 
+
+{% block css %}
+{{ parent() }}
+<link rel="stylesheet" href="{{CssPath}}redactor.min.css" />
+<link type="text/css" rel="stylesheet" href="{{CssPath}}ui-lightness/jquery-ui.min.css" />
+{% endblock css %}
+
 {% block js %}
 {{ parent() }}
-<script type="text/javascript" src="{{ThemePath}}/js/jquery.min.js"></script>
-<script type="text/javascript" src="{{ThemePath}}/js/jquery-ui.js"></script>
-<script type="text/javascript" src="{{ThemePath}}/js/jquery.ui.datepicker-fr.js"></script>
-<script type="text/javascript" src="{{ThemePath}}/js/redactor.js"></script>
-<script type="text/javascript" src="{{ThemePath}}/js/redactor-fr.js"></script>
+<script type="text/javascript" src="{{JsPath}}jquery.min.js"></script>
+<script type="text/javascript" src="{{JsPath}}jquery-ui.js"></script>
+<script type="text/javascript" src="{{JsPath}}jquery.ui.datepicker-fr.js"></script>
+<script type="text/javascript" src="{{JsPath}}redactor.js"></script>
+<script type="text/javascript" src="{{JsPath}}redactor-fr.js"></script>
 <script type="text/javascript">
 $(document).ready(function(){
 	// -- Editor

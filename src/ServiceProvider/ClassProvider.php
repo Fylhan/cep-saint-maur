@@ -9,16 +9,18 @@ class ClassProvider implements ServiceProviderInterface
 
     private $classes = array(
         'Core' => array(
-            'Request',
-            'Response'
+            'Response',
+            'Request'
         ),
         'Model' => array(
+            'Content',
             'News',
             'Upload'
         ),
         'Service' => array(
-            'Uploader',
-            'Feeder'
+            'Feeder',
+            'Mailer',
+            'Uploader'
         )
     );
 

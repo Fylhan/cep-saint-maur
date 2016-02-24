@@ -2,8 +2,9 @@
 namespace Service;
 
 use Model\EmailData;
+use Core\Base;
 
-class ContactService
+class Mailer extends Base
 {
 
     /**
@@ -13,7 +14,7 @@ class ContactService
      *            Données de l'email
      * @return boolean True si l'envoi à réussi, false sinon
      */
-    public function envoyerEmail(EmailData $emailData)
+    public function sendEmail(EmailData $emailData)
     {
         // Erreur : pas de destinataires
         if (NULL == $emailData->getDestinataires() || count($emailData->getDestinataires()) <= 0) {

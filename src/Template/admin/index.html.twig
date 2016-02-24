@@ -1,4 +1,4 @@
-{% extends 'administration/layout.html.twig' %}
+{% extends 'admin/layout.html.twig' %}
 
 {% block SubTitle %}
 {% endblock %}
@@ -12,7 +12,6 @@
 {% endblock %}
 
 {% block AdministrationBody %}
-{{ Message|raw }}
 {{ FlashMessage|raw }}
 
 <h2>Gérer les news</h2>
@@ -62,13 +61,26 @@
 
 {% include 'helper/paginator-bottom.html.twig' %}
 
-<h2>Paramètres</h2>
+<h2>Gérer les pages</h2>
+
+<p>Vous pouvez modifier les pages listées ci-dessous. Pour en ajouter une, demander à un administrateur.</p>
+<ul>
+	<li><a href="administration-update-page.html?url=contact" class="update" title="Modifier &quote; Nous contacter &quote;">Nous contacter</a></li>
+	<li><a href="administration-update-page.html?url=presentation" class="update" title="Modifier &quote; Nous connaître &quote;">Nous connaître</a></li>
+	<li><a href="administration-update-page.html?url=activities" class="update" title="Modifier &quote; Nos activités &quote;">Nos activités</a></li>
+	<li><a href="administration-update-page.html?url=help" class="update" title="Modifier &quote; Politique d'accessibilité &quote;">Politique d'accessibilité</a></li>
+</ul>
+
+
+<h2><a href="galery.html">Gérer les fichiers / images</a></h2>
+
+<h2>Gérer les paramètres</h2>
 <p>Quelques paramêtre du sites sont configurables ci-dessous. Faites bien attention ;-)</p>
-<form action="administration-data.html" method="post" id="formData" class="form">
+<form action="administration-update-data.html" method="post" id="formData" class="form">
 	<fieldset>
 		<legend>Interface utilisateur</legend>
 		<div>
-			<label for="nbParPage">Nombre de news par page</label>
+			<label for="nbParPage">News par page</label>
 				<input type="number" min="1" name="NbParPage" id="nbParPage" value="{{NbParPage}}" placeholder="2" size="3" class="mini" tabindex="{% set tabindex = tabindex+1 %}{{ tabindex }}" />
 			<div class="clear"></div>
 			<p><a href="administration-purge.html">Effacer les fichiers de cache</a> <small>(à faire suite à l'installation d'une nouvelle version du site Web)</small></p>
@@ -77,7 +89,7 @@
 	<fieldset>
 		<legend>Interface administrateur</legend>
 		<div>
-			<label for="nbParPageAdmin">Nombre de news par page</label>
+			<label for="nbParPageAdmin">News par page</label>
 				<input type="number" min="1" name="NbParPageAdmin" id="nbParPageAdmin" value="{{NbParPageAdmin}}" placeholder="10" size="3" class="mini" tabindex="{% set tabindex = tabindex+1 %}{{ tabindex }}" />
 		</div>
 		<div>
@@ -98,7 +110,7 @@
 
 
 {% block js %}
-<script type="text/javascript" src="{{ThemePath}}/js/jquery.min.js"></script>
+<script type="text/javascript" src="{{JsPath}}jquery.min.js"></script>
 <script type="text/javascript">
 $(function(){
 	$('.delete').click(function(){

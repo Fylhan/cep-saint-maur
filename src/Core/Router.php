@@ -10,8 +10,8 @@ class Router extends Base
 {
 
     private $_defaults = array(
-        'module' => 'accueil',
-        'action' => 'Accueil'
+        'module' => 'content',
+        'action' => 'index'
     );
 
     private $_filters = array();

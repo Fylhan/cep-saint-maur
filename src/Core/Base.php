@@ -10,11 +10,13 @@ use Pimple\Container;
  * @property \Core\Request                                $request
  * @property \Core\Response                               $response
  * @property \Core\Router                                 $router
+ * @property \Model\Content                               $content
  * @property \Model\News                                  $news
  * @property \Model\Upload                                $upload
  * @property \PicoDb\Database                             $db
- * @property \Service\Uploader                            $uploader
  * @property \Service\Feeder                              $feeder
+ * @property \Service\Mailer                              $mailer
+ * @property \Service\Uploader                            $uploader
  * @property \Twig_Environment                            $template
  */
 abstract class Base

@@ -3,7 +3,6 @@
  * Author: Blou & Fylhan
  * Creation: 15/07/2011
 */
-
 @font-face {
 	font-family: 'Existence';
 	src: url('../typo/Existence/existence-webfont.eot');
@@ -15,12 +14,13 @@
 	font-weight: normal;
 	font-style: normal;
 }
-article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section
-	{
+
+article, aside, details, figcaption, figure, footer, header, hgroup,
+	menu, nav, section {
 	display: block;
 }
 
-time,mark {
+time, mark {
 	display: inline;
 }
 
@@ -41,13 +41,14 @@ body {
 	font-family: Verdanna, Tahoma, Arial, Serif;
 }
 
-pre{
+pre {
 	display: block;
-	width:95%;
-	margin:5px auto;
-	padding: 0; 
+	width: 95%;
+	margin: 5px auto;
+	padding: 0;
 }
-pre code{
+
+pre code {
 	display: block;
 	margin: 0;
 	padding: 5px;
@@ -65,7 +66,7 @@ a:hover {
 	text-decoration: none;
 }
 
-a:focus,a:active {
+a:focus, a:active {
 	color: white;
 }
 
@@ -75,7 +76,7 @@ a.hide {
 }
 
 /* Titres */
-h1,h2,h3,h4,h5,h6 {
+h1, h2, h3, h4, h5, h6 {
 	font-family: 'Existence', Tahoma, Arial, serif;
 	margin: 1em 0 .2em 0;
 }
@@ -95,6 +96,7 @@ h2 {
 
 h3 {
 	font-size: 1.2em;
+	font-style: italic;
 }
 
 h4 {
@@ -294,7 +296,7 @@ footer ul li a {
 	}
 }
 
-#content>article,#content>div>article,#content aside>article {
+#content>article, #content>div>article, #content aside>article {
 	margin: 0;
 	padding: 0;
 	border: 1px solid #5AA3CF;
@@ -327,7 +329,7 @@ footer ul li a {
 }
 
 @media screen and (max-width: 700px) {
-	#content #contact,#content #activites,#content #quiSommesNous {
+	#content #contact, #content #activites, #content #quiSommesNous {
 		float: none;
 		width: 100%;
 		margin: 10px auto;
@@ -354,6 +356,11 @@ footer ul li a {
 /* First h2 of the article */
 #content article header+h2 {
 	margin-top: 5px;
+}
+
+#content article h3 {
+	margin: 5px 16px 10px 25px;
+	text-align: left;
 }
 
 #content .bloc p {
@@ -407,7 +414,7 @@ footer ul li a {
 	padding: 0;
 }
 
-#content .activitesPage ul,#content .contactPage ul {
+#content .activitesPage ul, #content .contactPage ul {
 	text-align: left;
 }
 
@@ -423,7 +430,7 @@ img.logoFlambeaux {
 	padding: 0;
 }
 
-#content .quiSommesNousPage ol,#content .quiSommesNousPage ul {
+#content .quiSommesNousPage ol, #content .quiSommesNousPage ul {
 	margin: 0 65px 35px 65px;
 	padding: 0;
 	text-align: justify;
@@ -437,13 +444,15 @@ img.logoFlambeaux {
 #content .quiSommesNousPage ol>li {
 	margin-top: 10px;
 }
+
 @media screen and (max-width: 700px) {
-	#content .quiSommesNousPage ol{
-	margin: 0 15px 15px 30px;
+	#content .quiSommesNousPage ol {
+		margin: 0 15px 15px 30px;
 	}
 }
-#content .page p,#content .page ul,#content .page ol,#content .page label,#content .actualite .texte
-	{
+
+#content .page p, #content .page ul, #content .page ol, #content .page label,
+	#content .actualite .texte {
 	font-size: 0.95em;
 }
 
@@ -478,7 +487,7 @@ img.logoFlambeaux {
 	padding: 0;
 }
 
-#content article figure>img,#content article figure>a img {
+#content article figure>img, #content article figure>a img {
 	clear: right;
 	margin: 0 auto;
 	padding: 0;
@@ -489,14 +498,14 @@ img.logoFlambeaux {
 	border: 1px solid #5AA3CF;
 }
 
-#content .bloc figure>img,#content .bloc figure>a img {
+#content .bloc figure>img, #content .bloc figure>a img {
 	width: 85%;
 	margin: 0 auto;
 	padding: 0;
 	border: 1px solid #5AA3CF;
 }
 
-#content .page figure>img,#content .page figure>a img {
+#content .page figure>img, #content .page figure>a img {
 	float: right;
 	margin: 20px;
 }
@@ -507,7 +516,7 @@ img.logoFlambeaux {
 		width: 90%;
 		margin: 10px auto;
 	}
-	#content .page figure>img,#content .page figure>a img {
+	#content .page figure>img, #content .page figure>a img {
 		float: none;
 		width: 95%;
 		margin: 5px auto;
@@ -688,7 +697,7 @@ img.logoFlambeaux {
 	font-size: 1.1em;
 }
 
-#content .texte h3,#content .texte h4 {
+#content .texte h3, #content .texte h4 {
 	margin: 0 30px 0 30px;
 	padding-left: 0;
 	text-align: left;
@@ -727,11 +736,11 @@ img.logoFlambeaux {
 	margin-left: 15x;
 }
 
-#content  .sitemapPage ul li,#content .actualite .texte ul li {
+#content  .sitemapPage ul li, #content .actualite .texte ul li {
 	padding: 1px 0;
 }
 
-#content .actualitesPage .actualite div.texte ul ul,#content  .sitemapPage ul ul
+#content .actualitesPage .actualite div.texte ul ul, #content  .sitemapPage ul ul
 	{
 	margin-top: -2px;
 }
@@ -779,7 +788,7 @@ img.logoFlambeaux {
 	color: white;
 }
 
-#content #menu ul li a:active,#content #menu ul li a:focus {
+#content #menu ul li a:active, #content #menu ul li a:focus {
 	background-color: rgba(41, 97, 140, 0.1);
 }
 
@@ -823,7 +832,7 @@ img.logoFlambeaux {
 
 /* --- Formulaire --- */
 #content form {
-	width: 90%;
+	width: 95%;
 	margin: 20px auto;
 	text-align: left;
 	clear: both;
@@ -843,27 +852,28 @@ img.logoFlambeaux {
 	text-align: right;
 }
 
-#content form div input,#content form div select,#content form div textarea,#content .form #cke_contenu
-	{
-	width: 45%;
+#content #administrationPage form div label {
+	width: 18%;
+}
+
+#content form div input, #content form div select, #content form div textarea {
+	width: 67%;
 	margin: 0 0 20px 0;
 	padding: 5px;
 }
 
 #content form div select {
-	width: 46.5%;
+	width: 69%;
 }
 
-#content form div textarea {
-	width: 60%;
+#content #administrationPage form div input, #content #administrationPage form div textarea {
+	width: 79%;
 }
 
 #content .form .redactor_box {
-	margin-left: 26%;
+	margin-left: 19%;
 	margin-bottom: 20px;
-	width: 73%;
 	color: black;
-	width: 73%;
 }
 
 #content .form .redactor_box textarea {
@@ -871,8 +881,8 @@ img.logoFlambeaux {
 }
 
 @media screen and (max-width: 700px) {
-	#content form div input,#content form div select,#content form div textarea,#content .form #cke_contenu
-		{
+	#content form div input, #content form div select, #content form div textarea,
+		#content .form #cke_contenu {
 		clear: left;
 		width: 90%;
 		margin-left: 0;
@@ -891,7 +901,7 @@ img.logoFlambeaux {
 	color: #C00;
 }
 
-#content form .mini {
+#content #administrationPage form .mini {
 	display: inline;
 	float: none;
 	clear: none;
@@ -1000,10 +1010,6 @@ img.logoFlambeaux {
 #content #administrationPage .conseilHandler {
 	font-size: 1.1em;
 	cursor: pointer;
-}
-
-#content #administrationPage .form div label {
-	width: 25%;
 }
 
 #administrationPage table.liste {

@@ -1,13 +1,12 @@
-{{ Message|raw }}
 {{ FlashMessage|raw }}
-<form action="{{ urlCourant }}#email" method="post" id="formContact" class="form">
+<form action="send-email.html#email" method="post" id="formContact" class="form">
 	<div>
 		<label for="nom">Votre nom</label>
-			<input type="text" name="nom" id="nom" value="{{ email.nom }}" placeholder="Votre nom" size="18" maxlength="100" tabindex="{% set tabindex = tabindex+1 %}{{ tabindex }}" />
+			<input type="text" name="nom" id="nom" value="{{ email.nom }}" placeholder="Votre nom" required="required" maxlength="100" />
 	</div>
 	<div>
 		<label for="email" class="requis">Votre email</label>
-			<input type="email" name="email" id="email" value="{{ email.email }}" size="18" maxlength="250" placeholder="Votre adresse email" required="required" tabindex="{% set tabindex = tabindex+1 %}{{ tabindex }}" />
+			<input type="email" name="email" id="email" value="{{ email.email }}" required="required" maxlength="250" placeholder="Votre adresse email" />
 	</div>
 	<div>
 		<label for="destinataire" class="requis">Qui voulez-vous contacter ?</label>
@@ -19,7 +18,7 @@
 	</div>
 	<div>
 		<label for="objet">Objet</label>
-			<input type="text" name="objet" id="objet" value="{{ email.objet }}"  placeholder="Objet de votre email" size="25" tabindex="{% set tabindex = tabindex+1 %}{{ tabindex }}" />
+			<input type="text" name="objet" id="objet" value="{{ email.objet }}"  placeholder="Objet de votre email" size="25" />
 	</div>
 	<div>
 		<label for="message" class="requis">Votre message</label>

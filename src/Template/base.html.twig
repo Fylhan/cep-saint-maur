@@ -10,21 +10,23 @@
 	<meta name="keywords" content="{{ metaKw }}" />
 	{% block preJs -%}
 	<!--[if lte IE 9]> 
-		<script text="text/javascript" src="{{ThemePath}}/js/html5.min.js"></script>
-		<link rel="stylesheet" type="text/css" href="{{ThemePath}}/css/ie.min.css" />
+		<script text="text/javascript" src="{{JsPath}}html5.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="{{CssPath}}ie.min.css" />
 	<![endif]-->
 	{% endblock %}
 	{%- block css %}
-	<link rel="stylesheet" type="text/css" title="{{SiteNom}}" href="{{ThemePath}}/css/style.min.css" />
+	<link rel="stylesheet" type="text/css" title="{{SiteNom}}" href="{{CssPath}}style.min.css" />
 	{% endblock %}
 	{%- block headProperties %}
 	<link rel="start" href="./" title="Accueil" />
 	<link rel="help" href="politique-accessibilite.html" title="Accessibilité" />
 	<link rel="accesskeys" href="politique-accessibilite.html#accesskeys" title="Raccourcis et Accesskeys" />
-	<link rel="shortcut icon" href="{{ ThemePath }}/img/favicon.ico" type="image/ico" />
+	<link rel="shortcut icon" href="{{ ImgPath }}favicon.ico" type="image/ico" />
 	{% endblock %}
-	<link rel="alternate" type="application/rss+xml" href="{{FeedPath}}" title="Actualités (RSS)" />
-	<link rel="alternate" type="application/atom+xml" href="{{FeedPath}}?feed=atom" title="Actualités (Atom)" />
+	<link rel="alternate" type="application/rss+xml" href="feed.xml" title="News (RSS)" />
+	<link rel="alternate" type="application/rss+xml" href="feed.xml?excerpt=1" title="News - extrait (RSS)" />
+	<link rel="alternate" type="application/atom+xml" href="feed.xml?feed=atom" title="News (Atom)" />
+	<link rel="alternate" type="application/atom+xml" href="feed.xml?feed=atom&excerpt=1" title="News - extrait (Atom)" />
 </head>
 
 <body>

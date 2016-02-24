@@ -10,17 +10,16 @@ Travail en cours
 * [███▒ 95%] Go to PHP PSR-0
 * [▒▒▒▒  0%] Optimiser les images : les passer en JPG
 * [████100%] Create proper config files
-* [█▒▒▒ 10%] Move illustrations and assets to assets, no templatable js
-* [▒▒▒▒  0%] Fix upload
+* [███▒ 75%] Move illustrations and assets to assets, no templatable js
+* [███▒ 75%] Fix upload (reduce instead of crop)
 * [▒▒▒▒  0%] Check envoi d'email
-* [█▒▒▒ 10%] Simplify installation
+* [█▒▒▒ 25%] Simplify installation
+* [▒▒▒▒  0%] Fix cache and filters
+* [▒▒▒▒  0%] Security check
 * [▒▒▒▒  0%] Add to travis
-* [▒▒▒▒  0%] Use PicoDB, sqlite, and automatically configure the db at installation
+* [██▒▒ 50%] Use PicoDB, sqlite, and automatically configure the db at installation
 * [▒▒▒▒  0%] [Accueil] Mettre à jour les images, en particulier pour le bloc "Actualités"
 * [▒▒▒▒  0%] [Nous connaître] Améliorer le contenu de la présentation, tout en restant court
-
-### Bugs connus
-* L'upload ne fonctionne plus
 
 Installation
 --------------------------------

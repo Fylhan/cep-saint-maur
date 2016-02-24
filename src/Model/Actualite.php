@@ -17,13 +17,19 @@ class Actualite
     private $titre;
 
     /**
-     *
+     * Full content without Lire la suite
      * @var string
      */
     private $contenu;
+    
+    /**
+     * With Lire la suite
+     * @var string
+     */
+    private $contenuRaw;
 
     /**
-     *
+     * Excerpt without Lire la suite
      * @var string
      */
     private $extrait;
@@ -57,6 +63,7 @@ class Actualite
         $this->id = isset($params['id']) ? intval($params['id']) : 0;
         $this->titre = @$params['title'];
         $this->contenu = @$params['content'];
+        $this->contentRaw = @$params['content_raw'];
         $this->extrait = @$params['excerpt'];
         $this->dateDebut = isset($params['date_start']) ? $params['date_start'] : time();
         $this->dateModif = isset($params['date_update']) ? $params['date_update'] : time();
@@ -198,4 +205,16 @@ class Actualite
         $this->etat = $etat;
         return $this;
     }
+
+    public function getContenuRaw()
+    {
+        return $this->contenuRaw;
+    }
+
+    public function setContenuRaw($contenuRaw)
+    {
+        $this->contenuRaw = $contenuRaw;
+        return $this;
+    }
+ 
 }

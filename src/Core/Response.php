@@ -46,12 +46,10 @@ class Response extends Base
             'SitePath' => SITE_PATH,
             'SiteNom' => SiteNom,
             'SiteDesc' => SiteDesc,
-            'ThemePath' => DEFAULT_THEME_PATH,
-            'ImgPath' => DEFAULT_THEME_PATH . '/img/',
-            'LibPath' => INCLUDE_PATH . '/lib',
-            'UploadPath' => UploadDir,
+            'CssPath' => CSS_PATH.'/',
+            'JsPath' => JS_PATH.'/',
+            'ImgPath' => IMG_PATH.'/',
             'CurrentPath' => getCurrentPage(),
-            'FeedPath' => FEED_PATH,
             'Locale' => getLocale(),
             'Debug' => DEBUG,
             'Encodage' => Encodage,
@@ -75,8 +73,8 @@ class Response extends Base
                 'redactor'
             );
             foreach ($cssFiles as $cssFile) {
-                if (DEBUG || ! is_file(DEFAULT_THEME_PATH . '/css/' . $cssFile . '.min.css')) {
-                    file_put_contents(DEFAULT_THEME_PATH . '/css/' . $cssFile . '.min.css', minifyCss(file_get_contents(DEFAULT_THEME_PATH . '/css/' . $cssFile . '.css')));
+                if (DEBUG || ! is_file(CSS_PATH . '/' . $cssFile . '.min.css')) {
+                    file_put_contents(CSS_PATH . '/' . $cssFile . '.min.css', minifyCss(file_get_contents(ASSETS_PATH . '/css/' . $cssFile . '.css')));
                 }
             }
             $jsFiles = array(
@@ -84,8 +82,8 @@ class Response extends Base
                 'contact'
             );
             foreach ($jsFiles as $jsFile) {
-                if (DEBUG || ! is_file(DEFAULT_THEME_PATH . '/js/' . $jsFile . '.min.js')) {
-                    file_put_contents(DEFAULT_THEME_PATH . '/js/' . $jsFile . '.min.js', minifyJs(file_get_contents(DEFAULT_THEME_PATH . '/js/' . $jsFile . '.js')));
+                if (DEBUG || ! is_file(JS_PATH . '/' . $jsFile . '.min.js')) {
+                    file_put_contents(JS_PATH . '/' . $jsFile . '.min.js', minifyJs(file_get_contents(ASSETS_PATH . '/js/' . $jsFile . '.js')));
                 }
             }
         }

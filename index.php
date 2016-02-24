@@ -13,8 +13,7 @@ $container->register(new \ServiceProvider\ClassProvider);
 $container->register(new \ServiceProvider\DatabaseProvider);
 $container['template'] = function ($c) {
     return new \Twig_Environment(new \Twig_Loader_Filesystem(array(
-        INCLUDE_PATH . '/Template/',
-        DEFAULT_THEME_PATH . '/js/'
+        SRC_PATH . '/Template/',
     )), array(
         'cache' => CACHE_PATH . '/twig',
         'debug' => DEBUG,

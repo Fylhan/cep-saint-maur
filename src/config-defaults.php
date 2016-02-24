@@ -17,21 +17,19 @@ defined('MetaDesc') or define('MetaDesc', SiteNom);
 // Convention : on ne termine jamais terminé par un slash !
 defined('SITE_PATH') or define('SITE_PATH', 'http://cepsaintmaur.fr/');
 defined('POSITION_RELATIVE') or define('POSITION_RELATIVE', '');
-defined('DATA_PATH') or define('DATA_PATH', POSITION_RELATIVE . 'data');
+defined('ASSETS_PATH') or define('ASSETS_PATH', POSITION_RELATIVE . 'assets');
+    defined('CSS_PATH') or define('CSS_PATH', ASSETS_PATH . '/css');
+    defined('IMG_PATH') or define('IMG_PATH', ASSETS_PATH . '/img');
+    defined('JS_PATH') or define('JS_PATH', ASSETS_PATH . '/js');
 defined('CACHE_PATH') or define('CACHE_PATH', POSITION_RELATIVE . 'cache');
-defined('INCLUDE_PATH') or define('INCLUDE_PATH', POSITION_RELATIVE . 'src');
+    defined('EMAIL_PATH') or define('EMAIL_PATH', CACHE_PATH . '/email');
+defined('DATA_PATH') or define('DATA_PATH', POSITION_RELATIVE . 'data');
+    defined('UPLOAD_PATH') or define('UPLOAD_PATH', DATA_PATH . '/upload');
+defined('SRC_PATH') or define('SRC_PATH', POSITION_RELATIVE . 'src');
 defined('VENDOR_PATH') or define('VENDOR_PATH', POSITION_RELATIVE . 'vendor');
-defined('EMAIL_PATH') or define('EMAIL_PATH', CACHE_PATH . '/email');
-defined('DOCUMENT_PATH') or define('DOCUMENT_PATH', DATA_PATH . '/document');
-defined('ILLUSTRATION_PATH') or define('ILLUSTRATION_PATH', DATA_PATH . '/illustration');
-defined('DEFAULT_THEME_PATH') or define('DEFAULT_THEME_PATH', POSITION_RELATIVE . 'assets');
-defined('CURRENT_THEME_PATH') or define('CURRENT_THEME_PATH', POSITION_RELATIVE . 'assets');
-defined('FEED_PATH') or define('FEED_PATH', SITE_PATH . 'feed.xml');
 
-defined('UploadDir') or define('UploadDir', DATA_PATH . '/upload/');
 defined('ParameterFilePath') or define('ParameterFilePath', CACHE_PATH . '/config-user.php');
 defined('BanFilePath') or define('BanFilePath', CACHE_PATH . '/ban.json');
-defined('GaleryFilePath') or define('GaleryFilePath', CACHE_PATH . '/galery.json');
 
 // Database
 defined('DB_DRIVER') or define("DB_DRIVER", 'sqlite');
@@ -75,6 +73,8 @@ defined('LoginTryNumber') or define('LoginTryNumber', 5); // 2 hours
 defined('LoginBanishedTimeout') or define('LoginBanishedTimeout', 30 * 60); // 30 min
 defined('ThumbWidth') or define('ThumbWidth', 200);
 defined('ThumbHeight') or define('ThumbHeight', 200);
+defined('ThumbAdminWidth') or define('ThumbAdminWidth', 128);
+defined('ThumbAdminHeight') or define('ThumbAdminHeight', 128);
 defined('CacheEnabled') or define('CacheEnabled', ! DEBUG);
 defined('CompressionEnabled') or define('CompressionEnabled', false);
 

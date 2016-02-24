@@ -1,0 +1,7 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+<article role="main" id="mainContent" class="page {{ page.url }}" >
+{{ page.content|raw }}
+</article>
+{% endblock content %}

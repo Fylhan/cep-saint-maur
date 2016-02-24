@@ -6,7 +6,62 @@ use Core\Base;
 class Uploader extends Base
 {
 
-    public function upload($file, $acceptedTypes, $dir = UploadDir)
+    /**
+     * Map for file of extension -> mime type
+     *
+     * @var array
+     */
+    const AcceptedTypesFile = array(
+        'txt' => 'text/plain',
+        'zip' => 'application/zip',
+        'mp3' => 'audio/mpeg',
+        'qt' => 'video/quicktime',
+        'mov' => 'video/quicktime',
+        'pdf' => 'application/pdf',
+        'doc' => 'application/msword',
+        'docx' => 'application/msword',
+        'xls' => 'application/vnd.ms-excel',
+        'xlsx' => 'application/vnd.ms-excel',
+        'ppt' => 'application/vnd.ms-powerpoint',
+        'pptx' => 'application/vnd.ms-powerpoint',
+        'odt' => 'application/vnd.oasis.opendocument.text',
+        'ods' => 'application/vnd.oasis.opendocument.spreadsheet',
+        'odp' => 'application/vnd.oasis.opendocument.presentation'
+    );
+
+    /**
+     * Map for picture of extension -> mime type
+     *
+     * @var array
+     */
+    const AcceptedTypesPicture = array(
+        'jpg' => 'image/jpeg',
+        'jpeg' => 'image/jpeg',
+        'png' => 'image/png',
+        'gif' => 'image/gif',
+        'svg' => 'image/svg'
+    );
+
+    /**
+     * Map of type -> corresponding thumb file name
+     *
+     * @var array
+     */
+    const TypesThumb = array(
+        'text/plain' => 'Icon_txt.png',
+        'application/zip' => 'Icon_zip.png',
+        'audio/mpeg' => 'Icon_aud.png',
+        'video/quicktime' => 'Icon_vid.png',
+        'application/pdf' => 'Icon_pdf.png',
+        'application/msword' => 'Icon_doc.png',
+        'application/vnd.ms-excel' => 'Icon_xls.png',
+        'application/vnd.ms-powerpoint' => 'Icon_ppt.png',
+        'application/vnd.oasis.opendocument.text' => 'Icon_doc.png',
+        'application/vnd.oasis.opendocument.spreadsheet' => 'Icon_xls.png',
+        'application/vnd.oasis.opendocument.presentation' => 'Icon_ppt.png'
+    );
+
+    public function upload($file, $acceptedTypes, $dir = UPLOAD_PATH)
     {
         // Verifications
         if (0 != $file["error"]) {
@@ -19,7 +74,7 @@ class Uploader extends Base
             throw new \Exception('Bad extension. Accepted: ' . implode(', ', array_keys($acceptedTypes)) . '. Received: ' . $fileExtensionType . ' (' . $fileMimeType . ')');
         }
         list ($fileName, $fileTitle) = $this->rename($file['name'], $fileMimeType, $fileExtensionType, $fileExtensionTypePosition);
-        $filePath = $dir . $fileName;
+        $filePath = $dir . '/' . $fileName;
         
         // Upload
         if (! file_exists($dir)) {
@@ -32,19 +87,25 @@ class Uploader extends Base
         if ($this->isPicture($filePath)) {
             $thumbName = $this->createThumb($fileName, ThumbWidth, ThumbHeight);
         }
+        else {
+            $thumbName = @self::TypesThumb[$fileMimeType];
+            if (false == $thumbName && 'image/svg+xml' != $fileMimeType) {
+                $thumbName = 'Icon_txt.png';
+            }
+        }
         
         return array(
             'title' => $fileTitle,
             'image' => $fileName,
-            'thumb' => $thumbName ? $thumbName : $fileName
+            'thumb' => $thumbName ? $thumbName : $fileName,
         );
     }
 
-    public function createThumb($fileName, $width, $height, $dir = UploadDir)
+    public function createThumb($fileName, $width, $height, $dir = UPLOAD_PATH)
     {
         $thumbName = 'thumb_' . $fileName;
-        $thumbPath = $dir . $thumbName;
-        $filePath = $dir . $fileName;
+        $thumbPath = $dir . '/' . $thumbName;
+        $filePath = $dir . '/' . $fileName;
         $info = getimagesize($filePath);
         $size = array(
             $info[0],
@@ -124,22 +185,6 @@ class Uploader extends Base
             'image/png',
             'image/gif'
         )));
-    }
-
-    public function addToGallery($fileInfo)
-    {
-        // Add to gallery
-        $content = file_get_contents(GaleryFilePath);
-        $gallery = array();
-        if (null != $content && '' != $content) {
-            $gallery = json_decode($content);
-        }
-        $gallery[] = array(
-            'thumb' => $this->realOffset . $fileInfo['dir'] . $fileInfo['name'],
-            'image' => $this->realOffset . $fileInfo['dir'] . $fileInfo['name'],
-            'title' => $fileInfo['title']
-        );
-        file_put_contents(GaleryFilePath, preg_replace('!},\s*!', '},' . "\n", json_encode($gallery)));
     }
 
     private function validate($fileMimeType, $fileExtensionType, $acceptedTypes)

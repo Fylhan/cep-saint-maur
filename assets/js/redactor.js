@@ -493,15 +493,15 @@ else
 $('#redactor_upload_btn').click($.proxy(this.imageUploadCallbackLink,this));},this);var endCallback=$.proxy(function()
 {if(this.opts.imageUpload===false&&this.opts.imageGetJson===false)
 {$('#redactor_file_link').focus();}},this);this.modalInit(RLANG.image,'image',570,handler,endCallback,true);},imageSetThumb:function(e)
-{this._imageSet('<img src="'+$(e.target).attr('rel')+'" alt="'+$(e.target).attr('title')+'" />',true);},imageUploadCallbackLink:function()
+{this._imageSet('<img src="'+$(e.target).attr('rel')+'" alt="'+$(e.target).attr('title')+'" style="max-width: 100%;" />',true);},imageUploadCallbackLink:function()
 {if($('#redactor_file_link').val()!=='')
-{var data='<img src="'+$('#redactor_file_link').val()+'" />';this._imageSet(data,true);}
+{var data='<img src="'+$('#redactor_file_link').val()+'" style="max-width: 100%;" />';this._imageSet(data,true);}
 else
 {this.modalClose();}},imageUploadCallback:function(data)
 {this._imageSet(data);},_imageSet:function(json,link)
 {this.restoreSelection();if(json!==false)
 {var html='',data='';if(link!==true)
-{data=$.parseJSON(json);html='<p><img src="'+data.filelink+'" /></p>';}
+{data=$.parseJSON(json);html='<p><img src="'+data.filelink+'" style="max-width: 100%;" /></p>';}
 else
 {html=json;}
 this.execCommand('inserthtml',html);if(link!==true&&typeof this.opts.imageUploadCallback==='function')

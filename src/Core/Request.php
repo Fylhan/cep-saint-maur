@@ -13,17 +13,22 @@ class Request extends Base
      * @var array
      */
     private $server;
+
     private $get;
+
     private $post;
+
     private $files;
+
     private $cookies;
+
     private $route;
 
     /**
      * Constructor
      *
      * @access public
-     * @param  \Pimple\Container   $container
+     * @param \Pimple\Container $container            
      */
     public function __construct(Container $container, array $server = array(), array $get = array(), array $post = array(), array $files = array(), array $cookies = array())
     {
@@ -34,7 +39,7 @@ class Request extends Base
         $this->files = empty($files) ? $_FILES : $files;
         $this->cookies = empty($cookies) ? $_COOKIE : $cookies;
     }
-    
+
     public function route($defaults = null)
     {
         $module = getModule();
@@ -46,20 +51,26 @@ class Request extends Base
         return $this->route;
     }
 
+    public function isPost()
+    {
+        return $_SERVER['REQUEST_METHOD'] === 'POST';
+    }
+
     public function isParam($key, $value = NULL)
     {
         return (NULL != $this->getParam($key) && (NULL == $value || $value == $this->getParam($key)));
     }
 
-    public function getParam($key, $type = 'string', $defaultValue='')
+    public function getParam($key, $type = 'string', $defaultValue = '')
     {
         $var = null;
         if (! empty($this->get) && isset($this->get[$key])) {
             $var = $this->get[$key];
         }
-        else if (! empty($this->post) && isset($this->post[$key])) {
-            $var = $this->post[$key];
-        }
+        else 
+            if (! empty($this->post) && isset($this->post[$key])) {
+                $var = $this->post[$key];
+            }
         if (null != $var) {
             if (startsWith($type, 'int')) {
                 return parserI($var);
@@ -99,7 +110,7 @@ class Request extends Base
 
     public function getValues()
     {
-        if (!empty($this->post)) {
+        if (! empty($this->post)) {
             return $this->post;
         }
         return null;

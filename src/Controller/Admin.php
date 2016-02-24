@@ -18,7 +18,7 @@ class Admin extends Action
         $params['DisplayHelp'] = DisplayHelp;
         
         $this->response->addVar('metaTitle', 'Administration');
-        $this->response->render('administration/index', $params);
+        $this->response->render('admin/index', $params);
     }
 
     public function update($params = array())
@@ -45,7 +45,7 @@ class Admin extends Action
                 $this->response->redirect('administration.html');
             }
         }
-        $this->response->render('administration/update', $params);
+        $this->response->render('admin/update', $params);
     }
 
     public function delete($params = array())
@@ -66,6 +66,28 @@ class Admin extends Action
         CacheManager::resetCache(true);
         $this->response->addFlash('Cache supprimé ! On refait une partie de cache-cache ?', OK);
         $this->response->redirect('administration.html');
+    }
+    
+
+    public function updatePage($params = array())
+    {
+        $url = $this->request->getParam('url', 'string');
+        if ($this->request->isPost()) {
+            if ($this->content->update($this->request->getValues())) {
+                $this->response->addFlash('Voilà une page éditée avec succès, bien joué !', OK);
+                $this->response->redirect('administration-update-page.html?url=' . $url);
+            }
+            $this->response->addFlash('Erreur lors de l\'édition de la page.', ERREUR);
+            $params['content'] = $this->request->getValues();
+            $this->response->render('admin/update-page', $params);
+        }
+    
+        $params['content'] = $this->content->getByUrl($url);
+        if (null == $params['content']) {
+            $this->response->addFlash('La page "' . $url . '" n\'existe pas. Si c\'est un problème, il va falloir contacter un administrateur.', NEUTRE);
+            $this->response->redirect('administration.html');
+        }
+        $this->response->render('admin/update-page', $params);
     }
 
     public function updateData($params = array())
@@ -112,6 +134,6 @@ un administrateur.', ERREUR);
         );
         $tplPparams = array_merge($tplPparams, $params);
         
-        $this->response->render('administration/mailing', $tplPparams);
+        $this->response->render('admin/mailing', $tplPparams);
     }
 }
