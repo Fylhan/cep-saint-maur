@@ -25,8 +25,7 @@ class Admin extends Action
     {
         // Update
         if ($this->request->isParam('sendNews')) {
-            $values = $this->news->prepareUpdate($this->request->getValues());
-            $id = $this->news->update($values);
+            $id = $this->news->update($this->request->getValues());
             // Cache obsolete
             CacheManager::resetCache();
             $this->response->addFlash('Voilà une news ajoutée avec succès, bien joué !', OK);

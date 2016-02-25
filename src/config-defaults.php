@@ -26,7 +26,6 @@ defined('CACHE_PATH') or define('CACHE_PATH', POSITION_RELATIVE . 'cache');
 defined('DATA_PATH') or define('DATA_PATH', POSITION_RELATIVE . 'data');
     defined('UPLOAD_PATH') or define('UPLOAD_PATH', DATA_PATH . '/upload');
 defined('SRC_PATH') or define('SRC_PATH', POSITION_RELATIVE . 'src');
-defined('VENDOR_PATH') or define('VENDOR_PATH', POSITION_RELATIVE . 'vendor');
 
 defined('ParameterFilePath') or define('ParameterFilePath', CACHE_PATH . '/config-user.php');
 defined('BanFilePath') or define('BanFilePath', CACHE_PATH . '/ban.json');
@@ -87,24 +86,3 @@ define('ERREUR_REDIRECTION', - 2);
 define('ERREUR', 0);
 define('OK', 1);
 define('NEUTRE', 2);
-
-// Config
-if (DEBUG) {
-    ini_set('display_errors', true);
-    ini_set('log_errors', true);
-}
-error_reporting(E_ALL);
-ini_set('error_log', CACHE_PATH . '/error_log.txt');
-define('MessageLog', CACHE_PATH . '/message_log.txt');
-date_default_timezone_set('Europe/Paris');
-ini_set('session.use_cookies', 1); // Use cookies to store session.
-ini_set('session.use_only_cookies', 1); // Force cookies for session (phpsessionID forbidden in URL)
-ini_set('session.use_trans_sid', false); // Prevent php to use sessionID in URL if cookies are disabled.
-ini_set('session.save_path', CACHE_PATH . '/sessions'); // Prevent php to use sessionID in URL if cookies are disabled.
-if (! is_dir(CACHE_PATH . '/sessions'))
-    mkdir(CACHE_PATH . '/sessions');
-session_name('cepsaintmaur');
-if (session_id() == '')
-    session_start();
-if (CompressionEnabled)
-    ob_start('ob_gzhandler');

@@ -67,7 +67,7 @@ class Actualite
         $this->extrait = @$params['excerpt'];
         $this->dateDebut = isset($params['date_start']) ? $params['date_start'] : time();
         $this->dateModif = isset($params['date_update']) ? $params['date_update'] : time();
-        $this->dateFin = isset($params['date_end']) ? $params['date_end'] : time() + 3600 * 30;
+        $this->dateFin = isset($params['date_end']) ? $params['date_end'] : time() + 3600 * 24 * 30;
         $this->etat = isset($params['state']) ? intval($params['state']) : 0;
     }
 

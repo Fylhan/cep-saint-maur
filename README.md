@@ -3,6 +3,8 @@ CEP Saint-Maur
 
 Site Web du CEP Saint-Maur
 
+[![Build Status](https://travis-ci.org/Fylhan/cep-saint-maur.svg?branch=master)](https://travis-ci.org/Fylhan/cep-saint-maur)
+
 Travail en cours
 --------------------------------
 ### Tâches en cours
@@ -16,7 +18,7 @@ Travail en cours
 * [█▒▒▒ 25%] Simplify installation
 * [▒▒▒▒  0%] Fix cache and filters
 * [▒▒▒▒  0%] Security check
-* [▒▒▒▒  0%] Add to travis
+* [█▒▒▒ 10%] Add to travis
 * [██▒▒ 50%] Use PicoDB, sqlite, and automatically configure the db at installation
 * [▒▒▒▒  0%] [Accueil] Mettre à jour les images, en particulier pour le bloc "Actualités"
 * [▒▒▒▒  0%] [Nous connaître] Améliorer le contenu de la présentation, tout en restant court

@@ -14,7 +14,7 @@ class News extends Base
      *
      * @var string
      */
-    const TABLE = DB_PREFIX . 'news';
+    const TABLE = 'cep_news';
 
     public function query($disabled = false)
     {
@@ -65,9 +65,9 @@ class News extends Base
      *            News id
      * @return array
      */
-    public function getById($news_id)
+    public function getById($news_id, $disabled = false)
     {
-        return $this->db->table(self::TABLE)
+        return $this->query($disabled)
             ->eq('id', $news_id)
             ->findOne();
     }
@@ -132,7 +132,7 @@ class News extends Base
         $values['id'] = intval(@$values['id']);
         $values['date_start'] = isset($values['date_start']) ? DateTime::createFromFormat('d/m/Y', $values['date_start'])->getTimestamp() : time();
         $values['date_update'] = time();
-        $values['date_end'] = isset($values['date_end']) ? DateTime::createFromFormat('d/m/Y', $values['date_end'])->getTimestamp() : time() + 3600 * 30; // +1 month
+        $values['date_end'] = isset($values['date_end']) ? DateTime::createFromFormat('d/m/Y', $values['date_end'])->getTimestamp() : time() + 3600 * 24 * 30; // +1 month
         $values['state'] = intval(@$values['state']);
         unset($values['sendNews']);
         return $values;
@@ -148,6 +148,7 @@ class News extends Base
      */
     public function update(array $values)
     {
+        $values = $this->prepareUpdate($values);
         if (! isset($values['id']) || empty($values['id']) || 0 == $values['id']) {
             unset($values['id']);
             $res = $this->persist(self::TABLE, $values);
@@ -158,7 +159,7 @@ class News extends Base
                 ->eq('id', $values['id'])
                 ->save($values);
         }
-        if (! res) {
+        if (! $res) {
             throw new DAOException('Erreur lors de la sauvegarde d\'une news');
         }
         return $values['id'];
@@ -207,9 +208,7 @@ class News extends Base
 
     public function findActualiteById($id, $disabled = false)
     {
-        $data = $this->query($disabled)
-            ->eq('id', $id)
-            ->findOne();
+        $data = $this->getById($id, $disabled);
         if (null != $data) {
             $data = array_merge($data, $this->computeExceprt($data));
             $data = new Actualite($data);
