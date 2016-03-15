@@ -11,12 +11,16 @@ class Upload extends Base
      *
      * @var string
      */
-    const TABLE = DB_PREFIX . 'upload';
+    const TABLE = 'cep_upload';
+
+    const TYPE_FILE = 0;
+
+    const TYPE_IMG = 1;
 
     public function query()
     {
         $query = $this->db->table(self::TABLE)
-            ->columns('id', 'title', 'image', 'thumb', 'date')
+            ->columns('id', 'title', 'filename', 'thumb', 'type', 'date')
             ->orderBy('title', Table::SORT_ASC);
         return $query;
     }
@@ -37,12 +41,16 @@ class Upload extends Base
     }
 
     /**
-     *
+     * @param integer $type Type of file: self::TYPE_FILE or self::TYPE_IMG
      * @return array
      */
-    public function getAll()
+    public function getAll($type = null)
     {
-        return $this->query()->findAll();
+        $qry = $this->query();
+        if (null !== $type) {
+            $qry->eq('type', $type);
+        }
+        return $qry->findAll();
     }
 
     /**
@@ -55,6 +63,7 @@ class Upload extends Base
      */
     public function prepare(array $values)
     {
+        $values['id'] = intval(@$values['id']);
         $values['date'] = time();
         unset($values['ack']);
         unset($values['dir']);
@@ -72,7 +81,7 @@ class Upload extends Base
     public function update(array $values)
     {
         $values = $this->prepare($values);
-        if (! isset($values['id']) || empty($values['id']) || 0 == $values['id']) {
+        if (0 === $values['id']) {
             unset($values['id']);
             $res = $this->persist(self::TABLE, $values);
             $values['id'] = $res;

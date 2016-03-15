@@ -8,9 +8,12 @@
 {{ FlashMessage|raw }}
 
 {% for image in images %}
+<div class="upload">
     <a href="{{ image.image }}" title="{{ image.title }}">
         <img src="{{ image.thumb }}" alt="{{ image.title }}" width="{{ image.width }}" height="{{ image.height }}"/>
     </a>
+    <a href="upload-delete.html?id={{ image.id }}" title="Supprimer le fichier" class="delete">Supprimer</a>
+</div>
 {% else %}
 Il n'y a aucun fichier pour l'instant.
 {% endfor %}

@@ -24,7 +24,7 @@ class Upload extends Action
         }
         $type = $this->request->getParam('type', 'string');
         
-        if (isset($_FILES['file']) && NULL != $_FILES['file'] && '' != $_FILES['file']) {
+        if (isset($_FILES['file']) && null != $_FILES['file'] && '' != $_FILES['file']) {
             $fileInfo = $this->uploader->upload($_FILES['file'], $acceptedTypes);
             if (false !== $fileInfo) {
                 $this->upload->update($fileInfo);
@@ -32,38 +32,57 @@ class Upload extends Action
             
             if ('human' == $type) {
                 $this->response->addFlash('Fichier téléversé avec succès.', OK);
-                $this->response->redirect('galery.html');
+                return $this->response->redirect('galery.html');
             }
             $params = array();
             if (false !== $fileInfo) {
-                $params['filelink'] = UPLOAD_PATH . '/' . $fileInfo['image'];
+                $params['filelink'] = UPLOAD_PATH . '/' . $fileInfo['filename'];
                 $params['title'] = $fileInfo['title'];
             }
-            $this->response->renderData($params);
+            return $this->response->renderData($params);
         }
         
         $this->response->addFlash('Erreur durant le téléversage du fichier.', ERREUR);
-        $this->response->redirect('galery.html');
+        return $this->response->redirect('galery.html');
+    }
+
+    public function delete()
+    {
+        $id = $this->request->getParam('id', 'int');
+        $fileInfo = $this->upload->getById($id);
+        if (empty($fileInfo)) {
+            $this->response->addFlash('Le fichier "' . $id . '" n\'existe pas.', ERREUR);
+            return $this->response->redirect('galery.html');
+        }
+        if ($this->upload->remove($id) && $this->uploader->delete($fileInfo['filename'])) {
+            if (\Model\Upload::TYPE_IMG == $fileInfo['type']) {
+                $this->uploader->delete($fileInfo['thumb']);
+            }
+            $this->response->addFlash('Fichier supprimé avec succès.', OK);
+            return $this->response->redirect('galery.html');
+        }
+        $this->response->addFlash('Errur lors de la suppression du fichier "' . $fileInfo['filename'] . '".', ERREUR);
+        return $this->response->redirect('galery.html');
     }
 
     public function galery($params = array())
     {
         $type = $this->request->getParam('type', 'string');
         
-        $images = $this->upload->getAll();
+        $files = $this->upload->getAll('human' == $type ? null : \Model\Upload::TYPE_IMG);
         
-        foreach ($images as $k => $image) {
-            $images[$k]['image'] = UPLOAD_PATH . '/' . $image['image'];
-            $images[$k]['thumb'] = (in_array($image['thumb'], Uploader::TypesThumb) ? IMG_PATH : UPLOAD_PATH) . '/' . $image['thumb'];
-            $images[$k]['width'] = ThumbAdminWidth;
-            $images[$k]['height'] = ThumbAdminHeight;
+        foreach ($files as $k => $image) {
+            $files[$k]['image'] = UPLOAD_PATH . '/' . $image['filename'];
+            $files[$k]['thumb'] = (in_array($image['thumb'], Uploader::TypesThumb) ? IMG_PATH : UPLOAD_PATH) . '/' . $image['thumb'];
+            $files[$k]['width'] = ThumbAdminWidth;
+            $files[$k]['height'] = ThumbAdminHeight;
         }
         
         if ('human' == $type) {
-            $this->response->render('upload/galery', array(
-                'images' => $images
+            return $this->response->render('upload/galery', array(
+                'images' => $files
             ));
         }
-        $this->response->renderData($images);
+        return $this->response->renderData($files);
     }
 }

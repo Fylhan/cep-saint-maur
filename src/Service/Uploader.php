@@ -2,6 +2,7 @@
 namespace Service;
 
 use Core\Base;
+use Model\Upload;
 
 class Uploader extends Base
 {
@@ -84,7 +85,8 @@ class Uploader extends Base
         if (! $uploaded) {
             throw new \Exception('Error during upload');
         }
-        if ($this->isPicture($filePath)) {
+        $isPicture = $this->isPicture($filePath);
+        if ($isPicture && 'image/svg+xml' != $fileMimeType) {
             $thumbName = $this->createThumb($fileName, ThumbWidth, ThumbHeight);
         }
         else {
@@ -96,8 +98,9 @@ class Uploader extends Base
         
         return array(
             'title' => $fileTitle,
-            'image' => $fileName,
+            'filename' => $fileName,
             'thumb' => $thumbName ? $thumbName : $fileName,
+            'type' => $isPicture ? Upload::TYPE_IMG : Upload::TYPE_FILE
         );
     }
 
@@ -176,6 +179,11 @@ class Uploader extends Base
         return false;
     }
 
+    public function delete($filePath, $dir = UPLOAD_PATH)
+    {
+        return unlink(UPLOAD_PATH . '/' . $filePath);
+    }
+
     public function isPicture($filePath)
     {
         $info = getimagesize($filePath);
@@ -183,7 +191,8 @@ class Uploader extends Base
             'image/jpeg',
             'image/jpg',
             'image/png',
-            'image/gif'
+            'image/gif',
+            'image/svg+xml'
         )));
     }
 

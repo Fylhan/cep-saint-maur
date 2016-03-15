@@ -23,8 +23,9 @@ function version_1(PDO $pdo)
         CREATE TABLE ' . DB_PREFIX . 'upload (
             id INTEGER PRIMARY KEY,
             title TEXT NULL,
-            image TEXT NOT NULL,
+            filename TEXT NOT NULL,
             thumb TEXT NULL,
+            type INTEGER DEFAULT 0,
             date int
         )
     ');
@@ -92,7 +93,7 @@ function version_1(PDO $pdo)
     
 
     $rq->execute(array(
-        'presentation',
+        'qui-sommes-nous',
         'Nous connaître',
         "<figure>
 	<img src=\"" . IMG_PATH . "/qui-sommes-nous.png\" alt=\"Nous connaître\" />
@@ -214,7 +215,7 @@ Nous vous laissons en découvrir plus sur ce que nous croyons à la lecture de n
     
     
     $rq->execute(array(
-        'activities',
+        'activites',
         'Nos activités',
         '<figure>
 		<img src="' . IMG_PATH . '/activites.png" alt="Nos activités" />
@@ -260,7 +261,7 @@ Nous vous laissons en découvrir plus sur ce que nous croyons à la lecture de n
     ));
     
     $rq->execute(array(
-        'help',
+        'politique-accessibilite',
         'Politique d\'accessibilité',
         "<header>
 	<h1>Politique d'accessibilité</h1>
