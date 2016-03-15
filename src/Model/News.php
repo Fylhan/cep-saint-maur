@@ -112,7 +112,7 @@ class News extends Base
      * @param
      *            array
      */
-    public function prepareUpdate(array $values)
+    public function prepare(array $values)
     {
         $values['id'] = intval(@$values['id']);
         $values['date_start'] = isset($values['date_start']) ? DateTime::createFromFormat('d/m/Y', $values['date_start'])->getTimestamp() : time();
@@ -133,7 +133,7 @@ class News extends Base
      */
     public function update(array $values)
     {
-        $values = $this->prepareUpdate($values);
+        $values = $this->prepare($values);
         if (! isset($values['id']) || empty($values['id']) || 0 == $values['id']) {
             unset($values['id']);
             $res = $this->persist(self::TABLE, $values);
@@ -145,7 +145,7 @@ class News extends Base
                 ->save($values);
         }
         if (! $res) {
-            throw new DAOException('Erreur lors de la sauvegarde d\'une news');
+            throw new \Exception('Erreur lors de la sauvegarde d\'une news');
         }
         return $values['id'];
     }

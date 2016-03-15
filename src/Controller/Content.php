@@ -10,22 +10,22 @@ class Content extends Action
     {
         $params = $this->news->getList(calculPage());
         $params['nomenu'] = true;
-        $this->response->render('content/index', $params);
+        return $this->response->render('content/index', $params);
     }
 
     public function presentation($params = array())
     {
-        return $this->show('presentation');
+        return $this->show('qui-sommes-nous');
     }
 
     public function activities($params = array())
     {
-        return $this->show('activities');
+        return $this->show('activites');
     }
 
     public function help($params = array())
     {
-        return $this->show('help');
+        return $this->show('politique-accessibilite');
     }
 
     private function show($url)
@@ -34,7 +34,7 @@ class Content extends Action
         $this->response->addVar('metaTitle', $content['title']);
         $this->response->addVar('metaDesc', $content['abstract']);
         $this->response->addVar('metaKw', $content['keywords']);
-        $this->response->render('content/show', array(
+        return $this->response->render('content/show', array(
             'page' => $content
         ));
     }

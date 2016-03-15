@@ -34,15 +34,15 @@ class CacheManagerTest extends Base
     public function testGetController()
     {
         $this->mycontainer['request']->method('getController')->will($this->returnValue('content'));
-        $this->assertEquals($this->cacher->getCacheDir('othercontroller'), CACHE_PATH . '/othercontroller');
-        $this->assertEquals($this->cacher->getCacheDir(), CACHE_PATH . '/content');
+        $this->assertEquals(CACHE_PATH . '/othercontroller', $this->cacher->getCacheDir('othercontroller'));
+        $this->assertEquals(CACHE_PATH . '/content', $this->cacher->getCacheDir());
     }
 
     public function testGetCacheFilepath()
     {
         $this->mycontainer['request']->method('getController')->will($this->returnValue('content'));
         $this->mycontainer['request']->method('getId')->will($this->returnValue('test'));
-        $this->assertEquals($this->cacher->getCacheFilepath(), CACHE_PATH . '/content/test.cache');
+        $this->assertEquals(CACHE_PATH . '/content/test.cache', $this->cacher->getCacheFilepath());
     }
 
     public function testIsEnabled()

@@ -3,7 +3,6 @@ namespace Controller;
 
 use Core\Action;
 use Model\Actualite;
-use Service\CacheManager;
 
 class Admin extends Action
 {
@@ -11,6 +10,7 @@ class Admin extends Action
     public function index($params = array())
     {
         $params = $this->news->getList(calculPage(), true, NbParPageAdmin, 'actualité');
+        $params['contents'] = $this->content->getList();
         $params['UrlEmailAdmin'] = getUrlImgEmail(EmailAdmin);
         $params['NbParPage'] = NbParPage;
         $params['NbParPageAdmin'] = NbParPageAdmin;
@@ -18,18 +18,22 @@ class Admin extends Action
         $params['DisplayHelp'] = DisplayHelp;
         
         $this->response->addVar('metaTitle', 'Administration');
-        $this->response->render('admin/index', $params);
+        return $this->response->render('admin/index', $params);
     }
 
     public function update($params = array())
     {
         // Update
         if ($this->request->isParam('sendNews')) {
-            $id = $this->news->update($this->request->getValues());
-            // Cache obsolete
-            CacheManager::resetCache();
-            $this->response->addFlash('Voilà une news ajoutée avec succès, bien joué !', OK);
-            $this->response->redirect('administration-update.html?id=' . $id . '#administrationPage');
+            if (false !== ($id = $this->news->update($this->request->getValues()))) {
+                // Cache obsolete
+                $this->cacheManager->resetCache();
+                $this->response->addFlash('Voilà une news ajoutée avec succès, bien joué !', OK);
+                return $this->response->redirect('administration-update.html?id=' . $id . '#administrationPage');
+            }
+            $this->response->addFlash('Erreur lors de l\'édition de la news.', ERREUR);
+            $params['Actualite'] = new Actualite($this->request->getValues());
+            return $this->response->render('admin/update', $params);
         }
         
         // Display
@@ -41,10 +45,10 @@ class Admin extends Action
             $params['Actualite'] = $this->news->findActualiteById($id, true);
             if (null == $params['Actualite']) {
                 $this->response->addFlash('La news ' . $id . ' n\'existe pas. Si c\'est un problème, il va falloir contacter un administrateur.', NEUTRE);
-                $this->response->redirect('administration.html');
+                return $this->response->redirect('administration.html');
             }
         }
-        $this->response->render('admin/update', $params);
+        return $this->response->render('admin/update', $params);
     }
 
     public function delete($params = array())
@@ -52,21 +56,20 @@ class Admin extends Action
         $id = $this->request->getParam('id', 'int');
         if ($this->news->remove($id)) {
             // Cache obsolete
-            CacheManager::resetCache();
+            $this->cacheManager->resetCache();
             $this->response->addFlash('La news ' . $id . ' a été supprimée. Bien joué !', OK);
-            $this->response->redirect('administration.html');
+            return $this->response->redirect('administration.html');
         }
         $this->response->addFlash('Arg, ça ne marche pas. La news ' . $id . ' n\'a pas été supprimée.', ERREUR);
-        $this->response->redirect('administration.html');
+        return $this->response->redirect('administration.html');
     }
 
     public function purgeCache()
     {
-        CacheManager::resetCache(true);
+        $this->cacheManager->resetCache(true);
         $this->response->addFlash('Cache supprimé ! On refait une partie de cache-cache ?', OK);
-        $this->response->redirect('administration.html');
+        return $this->response->redirect('administration.html');
     }
-    
 
     public function updatePage($params = array())
     {
@@ -74,19 +77,19 @@ class Admin extends Action
         if ($this->request->isPost()) {
             if ($this->content->update($this->request->getValues())) {
                 $this->response->addFlash('Voilà une page éditée avec succès, bien joué !', OK);
-                $this->response->redirect('administration-update-page.html?url=' . $url);
+                return $this->response->redirect('administration-update-page.html?url=' . $url);
             }
             $this->response->addFlash('Erreur lors de l\'édition de la page.', ERREUR);
             $params['content'] = $this->request->getValues();
-            $this->response->render('admin/update-page', $params);
+            return $this->response->render('admin/update-page', $params);
         }
-    
+        
         $params['content'] = $this->content->getByUrl($url);
         if (null == $params['content']) {
             $this->response->addFlash('La page "' . $url . '" n\'existe pas. Si c\'est un problème, il va falloir contacter un administrateur.', NEUTRE);
-            $this->response->redirect('administration.html');
+            return $this->response->redirect('administration.html');
         }
-        $this->response->render('admin/update-page', $params);
+        return $this->response->render('admin/update-page', $params);
     }
 
     public function updateData($params = array())
@@ -108,13 +111,13 @@ class Admin extends Action
             
             if (false != file_put_contents(ParameterFilePath, $data)) {
                 $this->response->addFlash('Paramètres bien enregistrés, super !', OK);
-                $this->response->redirect('administration.html');
+                return $this->response->redirect('administration.html');
             }
         }
         // Error
         $this->response->addFlash('Arg, impossible de mettre à jour les paramètres. Désolé, mais il va falloir en parler avec
 un administrateur.', ERREUR);
-        $this->response->redirect('administration.html');
+        return $this->response->redirect('administration.html');
     }
 
     public function mailing($params = array())
@@ -126,13 +129,9 @@ un administrateur.', ERREUR);
             'gdj@cepsaintmaur.com',
             'musique@cepsaintmaur.com'
         );
+        $params['UrlCourant'] = 'administration-listes-diffusion.html';
         $this->response->addVar('metaTitle', 'Administration - Gérer les listes de diffusion');
         
-        $tplPparams = array(
-            'UrlCourant' => 'administration-listes-diffusion.html'
-        );
-        $tplPparams = array_merge($tplPparams, $params);
-        
-        $this->response->render('admin/mailing', $tplPparams);
+        return $this->response->render('admin/mailing', $params);
     }
 }

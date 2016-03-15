@@ -27,6 +27,6 @@ class Feed extends Action
         elseif (ATOM == $feedType) {
             $contentType = "atom+xml";
         }
-        $this->response->renderData($data, $contentType);
+        return $this->response->renderData($data, $contentType);
     }
 }

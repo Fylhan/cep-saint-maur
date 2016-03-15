@@ -46,9 +46,9 @@ class Response extends Base
             'SitePath' => SITE_PATH,
             'SiteNom' => SiteNom,
             'SiteDesc' => SiteDesc,
-            'CssPath' => CSS_PATH.'/',
-            'JsPath' => JS_PATH.'/',
-            'ImgPath' => IMG_PATH.'/',
+            'CssPath' => CSS_PATH . '/',
+            'JsPath' => JS_PATH . '/',
+            'ImgPath' => IMG_PATH . '/',
             'CurrentPath' => getCurrentPage(),
             'Locale' => getLocale(),
             'Debug' => DEBUG,
@@ -57,6 +57,7 @@ class Response extends Base
             'metaTitle' => getMetaTitle($this->response->getVar('metaTitle'), @$this->response->getVar('page')),
             'metaDesc' => getMetaDesc($this->response->getVar('metaDesc'), @$this->response->getVar('page')),
             'metaKw' => getMetaKw($this->response->getVar('metaKw')),
+            'controller' => $this->request->getController(),
             'action' => $this->request->getAction(),
             'FlashMessage' => @$this->response->getFlash()
         );
@@ -66,50 +67,56 @@ class Response extends Base
         
         // -- Minify CSS and JS (TODO: move somewhere else)
         if (DEBUG) {
-            $cssFiles = array(
-                'ie',
-                'style',
-                'highlight-default',
-                'redactor'
-            );
-            foreach ($cssFiles as $cssFile) {
-                if (DEBUG || ! is_file(CSS_PATH . '/' . $cssFile . '.min.css')) {
-                    file_put_contents(CSS_PATH . '/' . $cssFile . '.min.css', minifyCss(file_get_contents(ASSETS_PATH . '/css/' . $cssFile . '.css')));
-                }
-            }
-            $jsFiles = array(
-                'html5',
-                'contact'
-            );
-            foreach ($jsFiles as $jsFile) {
-                if (DEBUG || ! is_file(JS_PATH . '/' . $jsFile . '.min.js')) {
-                    file_put_contents(JS_PATH . '/' . $jsFile . '.min.js', minifyJs(file_get_contents(ASSETS_PATH . '/js/' . $jsFile . '.js')));
-                }
-            }
+            $this->minifyCssJs();
         }
         
         // Create body
         $tpl = $this->template->loadTemplate($tplPath . '.html.twig');
         $body = $tpl->render($this->response->getVars());
         $this->setBody($body);
-        
         $this->printOut();
-        exit();
+        return true;
     }
-    
+
     /**
-     * 
-     * @param $data Array for JSON or string or anything else
-     * @param string $type JSON by default
+     *
+     * @param $data Array
+     *            for JSON or string or anything else
+     * @param string $type
+     *            JSON by default
      */
-    public function renderData($data, $type='json')
+    public function renderData($data, $type = 'json')
     {
         $this->addHeader('Cache-Control', 'no-cache, must-revalidate');
         $this->addHeader('Expires', 'Sat, 29 Oct 2011 13:00:00 GMT+1'); // A date in the past
-        $this->addHeader('Content-type', 'application/'.$type.'; charset=UTF-8');
+        $this->addHeader('Content-type', 'application/' . $type . '; charset=UTF-8');
         $this->setBody('json' === $type ? json_encode($data) : $data);
         $this->printOut();
-        exit();
+        return true;
+    }
+
+    public function minifyCssJs()
+    {
+        $cssFiles = array(
+            'ie',
+            'highlight-default',
+            'redactor',
+            'style'
+        );
+        foreach ($cssFiles as $cssFile) {
+            if (! is_file(CSS_PATH . '/' . $cssFile . '.min.css')) {
+                file_put_contents(CSS_PATH . '/' . $cssFile . '.min.css', minifyCss(file_get_contents(ASSETS_PATH . '/css/' . $cssFile . '.css')));
+            }
+        }
+        $jsFiles = array(
+            'html5',
+            'contact'
+        );
+        foreach ($jsFiles as $jsFile) {
+            if (! is_file(JS_PATH . '/' . $jsFile . '.min.js')) {
+                file_put_contents(JS_PATH . '/' . $jsFile . '.min.js', minifyJs(file_get_contents(ASSETS_PATH . '/js/' . $jsFile . '.js')));
+            }
+        }
     }
 
     public function addBlock($key, $block)
@@ -155,7 +162,9 @@ class Response extends Base
     }
 
     /**
+     *
      * @deprecated
+     *
      */
     public function setFlash(Message $value)
     {

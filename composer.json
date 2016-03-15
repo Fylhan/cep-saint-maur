@@ -1,24 +1,35 @@
 {
 	"name" : "fylhan/cep-saint-maur",
+	"type" : "project",
 	"description" : "Site Web du CEP Saint-Maur",
+	"homepage" : "http://cepsaintmaur.fr",
+	"license" : "LGPL-3.0",
 	"authors" : [{
 			"name" : "Olivier Maridat",
 			"homepage" : "http://olivier.maridat.com",
 			"role" : "developper"
 		}
 	],
-	"homepage" : "http://cepsaintmaur.fr",
-	"license" : "LGPL-3.0",
+	"config" : {
+		"preferred-install" : "dist",
+		"optimize-autoloader" : true,
+		"discard-changes" : true
+	},
 	"require" : {
+		"php" : ">=5.5",
 		"twig/twig" : "1.*",
-		"fguillot/picodb" : "1.0.4",
-		"pimple/pimple" : "~3.0"
+		"fguillot/picodb" : "1.0.7",
+		"fguillot/simpleLogger" : "1.0.0",
+		"pimple/pimple" : "~3.0",
+		"swiftmailer/swiftmailer" : "~5.4",
+		"symfony/console" : "~2.7",
+		"symfony/event-dispatcher" : "~2.7"
 	},
 	"require-dev" : {
-        "phpunit/phpunit" : "5.1.*"
-    },
+		"phpunit/phpunit" : "5.1.*"
+	},
 	"autoload" : {
-		"psr-0" : {
+		"psr-4" : {
 			"" : "src/"
 		},
 		"files" : [

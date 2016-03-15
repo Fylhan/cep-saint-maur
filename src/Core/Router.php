@@ -13,7 +13,7 @@ class Router extends Base
     {
         $this->filters[] = $filter;
     }
-    
+
     public function dispatch()
     {
         try {
@@ -32,7 +32,7 @@ class Router extends Base
                 }
             }
         } catch (\Exception $e) {
-            $this->launchException($e)->printOut();
+            $this->launchException($e);
         }
     }
 
@@ -48,10 +48,10 @@ class Router extends Base
     {
         $class = '\\Controller\\' . ucfirst($controller);
         if (! class_exists($class)) {
-            throw new RuntimeException('Controller "'.$controller.'" not found');
+            throw new RuntimeException('Controller "' . $controller . '" not found');
         }
         if (! method_exists($class, $action)) {
-            throw new RuntimeException('Action "'.$controller.'::'.$action.'" not implemented');
+            throw new RuntimeException('Action "' . $controller . '::' . $action . '" not implemented');
         }
         $instance = new $class($this->container);
         return $instance;
@@ -59,17 +59,14 @@ class Router extends Base
 
     private function launchException($e)
     {
+        logThatException($e);
         $this->response->addVar('error', $e->__toString());
         if ($e instanceof RuntimeException) {
             $this->response->addVar('metaTitle', 'Erreur - Page introuvable');
             $this->response->addVar('page', $this->request->getRoute());
-            $this->response->render('error/404');
+            return $this->response->render('error/404');
         }
-        else {
-            $this->response->addVar('metaTitle', 'Erreur critique');
-            $this->response->render('error/500');
-        }
-        logThatException($e);
-        return $this->response;
+        $this->response->addVar('metaTitle', 'Erreur critique');
+        return $this->response->render('error/500');
     }
 }

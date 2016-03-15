@@ -1,43 +1,70 @@
 #AddHandler x-mapp-php6 .php 
-RewriteEngine on
-RewriteBase /Web/Perso/cep-saint-maur/
-#RewriteBase /
+<IfModule mod_rewrite.c>
+#    Options -MultiViews
 
-# Règle de redirection
-## --- REGLES WWW ---
-RewriteCond %{HTTP_HOST} ^www.cepsaintmaur.fr$
-RewriteRule ^(.*) http://cepsaintmaur.fr/$1 [QSA,L,R=301]
+#    SetEnv HTTP_MOD_REWRITE On
 
-ErrorDocument 404 http://cepsaintmaur.fr/404.html
+#    RewriteEngine On
+#    RewriteCond %{REQUEST_FILENAME} !-f
+#    RewriteRule ^ index.php [QSA,L]
+    
+    RewriteEngine on
+    RewriteBase /Web/Perso/cep-saint-maur/
+    #RewriteBase /
+    
+    # Règle de redirection
+    ## --- REGLES WWW ---
+    RewriteCond %{HTTP_HOST} ^www.cepsaintmaur.fr$
+    RewriteRule ^(.*) http://cepsaintmaur.fr/$1 [QSA,L,R=301]
+    
+    ErrorDocument 404 http://cepsaintmaur.fr/404.html
+    
+    ## --- REGLES SEULES ---
+    RewriteRule ^(?:|index.html)$ index.php?controller=content&action=index [L,QSA]
+    RewriteRule ^([0-9]*)/?evenements.html?$ index.php?controller=news&action=index&page=$1 [L,QSA]
+    RewriteRule ^evenement-([0-9]*).html?$ index.php?controller=news&action=show&id=$1 [L,QSA]
+    RewriteRule ^activites.html$ index.php?controller=content&action=activities [L,QSA]
+    RewriteRule ^qui-sommes-nous.html$ index.php?controller=content&action=presentation [L,QSA]
+    RewriteRule ^politique-accessibilite.html$ index.php?controller=content&action=help [L,QSA]
+    RewriteRule ^contact.html$ index.php?controller=contact&action=show [L,QSA]
+    RewriteRule ^send-email.html$ index.php?controller=contact&action=send [L,QSA]
+    RewriteRule ^feed.xml$ index.php?controller=feed&action=index [L,QSA]
+    RewriteRule ^sitemap.xml$ index.php?controller=sitemap&action=index [L,QSA]
+    RewriteRule ^sitemap.html$ index.php?controller=sitemap&action=index&type=human [L,QSA]
+    
+    RewriteRule ^([0-9]*)/?administration.html$ index.php?controller=admin&action=index&page=$1 [L,QSA]
+    RewriteRule ^administration-update.html$ index.php?controller=admin&action=update [L,QSA]
+    RewriteRule ^administration-delete.html$ index.php?controller=admin&action=delete [L,QSA]
+    RewriteRule ^administration-update-page.html$ index.php?controller=admin&action=updatePage [L,QSA]
+    RewriteRule ^administration-update-data.html$ index.php?controller=admin&action=updateData [L,QSA]
+    RewriteRule ^administration-purge.html$ index.php?controller=admin&action=purgeCache [L,QSA]
+    RewriteRule ^administration-mailing.html$ index.php?controller=admin&action=mailing&page=$1 [L,QSA]
+    RewriteRule ^upload.html$ index.php?controller=upload&action=upload [L,QSA]
+    RewriteRule ^upload-delete.html$ index.php?controller=upload&action=delete [L,QSA]
+    RewriteRule ^upload-picture.html$ index.php?controller=upload&action=picture [L,QSA]
+    RewriteRule ^upload-file.html$ index.php?controller=upload&action=file [L,QSA]
+    RewriteRule ^galery.html$ index.php?controller=upload&action=galery&type=human [L,QSA]
+    RewriteRule ^galery.json$ index.php?controller=upload&action=galery [L,QSA]
+    
+    RewriteRule ^(.*).html$ index.php?controller=error&action=$1 [L,QSA]
+</IfModule>
 
-## --- REGLES SEULES ---
-RewriteRule ^(?:|index.html)$ index.php?controller=content&action=index [L,QSA]
-RewriteRule ^([0-9]*)/?evenements.html?$ index.php?controller=news&action=index&page=$1 [L,QSA]
-RewriteRule ^evenement-([0-9]*).html?$ index.php?controller=news&action=show&id=$1 [L,QSA]
-RewriteRule ^activites.html$ index.php?controller=content&action=activities [L,QSA]
-RewriteRule ^qui-sommes-nous.html$ index.php?controller=content&action=presentation [L,QSA]
-RewriteRule ^politique-accessibilite.html$ index.php?controller=content&action=help [L,QSA]
-RewriteRule ^contact.html$ index.php?controller=contact&action=show [L,QSA]
-RewriteRule ^send-email.html$ index.php?controller=contact&action=send [L,QSA]
-RewriteRule ^feed.xml$ index.php?controller=feed&action=index [L,QSA]
-RewriteRule ^sitemap.xml$ index.php?controller=sitemap&action=index [L,QSA]
-RewriteRule ^sitemap.html$ index.php?controller=sitemap&action=index&type=human [L,QSA]
+<FilesMatch "(config.php|config.default.php)">
+    <IfModule mod_version.c>
+        <IfVersion >= 2.3>
+            Require all denied
+        </IfVersion>
+        <IfVersion < 2.3>
+            Order allow,deny
+            Deny from all
+        </IfVersion>
+    </IfModule>
 
-RewriteRule ^([0-9]*)/?administration.html$ index.php?controller=admin&action=index&page=$1 [L,QSA]
-RewriteRule ^administration-update.html$ index.php?controller=admin&action=update [L,QSA]
-RewriteRule ^administration-delete.html$ index.php?controller=admin&action=delete [L,QSA]
-RewriteRule ^administration-update-page.html$ index.php?controller=admin&action=updatePage [L,QSA]
-RewriteRule ^administration-update-data.html$ index.php?controller=admin&action=updateData [L,QSA]
-RewriteRule ^administration-purge.html$ index.php?controller=admin&action=purgeCache [L,QSA]
-RewriteRule ^administration-mailing.html$ index.php?controller=admin&action=mailing&page=$1 [L,QSA]
-RewriteRule ^upload.html$ index.php?controller=upload&action=upload [L,QSA]
-RewriteRule ^upload-picture.html$ index.php?controller=upload&action=picture [L,QSA]
-RewriteRule ^upload-file.html$ index.php?controller=upload&action=file [L,QSA]
-RewriteRule ^galery.html$ index.php?controller=upload&action=galery&type=human [L,QSA]
-RewriteRule ^galery.json$ index.php?controller=upload&action=galery [L,QSA]
-
-RewriteRule ^(.*).html$ index.php?controller=error&action=$1 [L,QSA]
-
+    <IfModule !mod_version.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
+</FilesMatch>
 
 # ----------------------------------------------------------------------
 # Proper MIME type for all files

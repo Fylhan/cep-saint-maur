@@ -8,6 +8,10 @@ php:
   - 5.4
   - 5.3
 
+env:
+  - DB=sqlite
+  - DB=mysql
+
 matrix:
   fast_finish: true
 
@@ -17,4 +21,4 @@ before_script:
   - php -i
 
 script:
-  - phpunit -c tests/units.sqlite.xml
+  - phpunit -c tests/units.$DB.xml

@@ -2,7 +2,6 @@
 namespace Controller;
 
 use Core\Action;
-use Core\MVCException;
 
 class News extends Action
 {
@@ -16,7 +15,7 @@ class News extends Action
         $this->response->addVar('metaDesc', 'Dernières nouvelles');
         $this->response->addVar('metaKw', 'news, événements');
         
-        $this->response->render('news/index', $tplPparams);
+        return $this->response->render('news/index', $tplPparams);
     }
 
     public function show($params = array())
@@ -32,10 +31,8 @@ class News extends Action
         }
         // 404
         else {
-            $e = new MVCException();
-            $e->setPage('d\'actualité ' . $id);
-            throw $e;
+            throw new \RuntimeException('Page d\'actualité "' . $id . '" introuvable.');
         }
-        $this->response->render('news/show', $params);
+        return $this->response->render('news/show', $params);
     }
 }

@@ -11,7 +11,7 @@ class Content extends Base
      *
      * @var string
      */
-    const TABLE = DB_PREFIX . 'content';
+    const TABLE = 'cep_content';
 
     public function query()
     {
@@ -53,10 +53,10 @@ class Content extends Base
             ->findOne();
     }
 
-    public function getAll()
+    public function getList()
     {
         return $this->query()
-            ->orderBy('url', Table::SORT_DESC)
+            ->orderBy('title', Table::SORT_ASC)
             ->findAll();
     }
 
@@ -69,9 +69,8 @@ class Content extends Base
      */
     public function prepare(array $values)
     {
-        $values['id'] = intval($values['id']);
+        $values['id'] = intval(@$values['id']);
         $values['date_update'] = time();
-        $values['keywords'] = trim($values['keywords']);
         return $values;
     }
 
@@ -86,8 +85,20 @@ class Content extends Base
     public function update(array $values)
     {
         $values = $this->prepare($values);
-        return $this->db->table(self::TABLE)
-            ->eq('url', $values['url'])
-            ->save($values);
+        if (! isset($values['id']) || empty($values['id']) || 0 == $values['id']) {
+            unset($values['id']);
+            $res = $this->persist(self::TABLE, $values);
+            $values['id'] = $res;
+        }
+        else {
+            $res = $this->db->table(self::TABLE)
+                ->eq('id', $values['id'])
+                ->save($values);
+        }
+        if (! $res) {
+            // TODO Add warning log
+            return false;
+        }
+        return $values['id'];
     }
 }

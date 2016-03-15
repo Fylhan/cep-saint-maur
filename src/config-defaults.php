@@ -21,10 +21,10 @@ defined('ASSETS_PATH') or define('ASSETS_PATH', POSITION_RELATIVE . 'assets');
     defined('CSS_PATH') or define('CSS_PATH', ASSETS_PATH . '/css');
     defined('IMG_PATH') or define('IMG_PATH', ASSETS_PATH . '/img');
     defined('JS_PATH') or define('JS_PATH', ASSETS_PATH . '/js');
-defined('CACHE_PATH') or define('CACHE_PATH', POSITION_RELATIVE . 'cache');
-    defined('EMAIL_PATH') or define('EMAIL_PATH', CACHE_PATH . '/email');
 defined('DATA_PATH') or define('DATA_PATH', POSITION_RELATIVE . 'data');
     defined('UPLOAD_PATH') or define('UPLOAD_PATH', DATA_PATH . '/upload');
+    defined('CACHE_PATH') or define('CACHE_PATH', DATA_PATH . '/cache');
+        defined('EMAIL_PATH') or define('EMAIL_PATH', CACHE_PATH . '/email');
 defined('SRC_PATH') or define('SRC_PATH', POSITION_RELATIVE . 'src');
 
 defined('ParameterFilePath') or define('ParameterFilePath', CACHE_PATH . '/config-user.php');

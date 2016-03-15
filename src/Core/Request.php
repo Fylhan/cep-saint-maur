@@ -104,7 +104,7 @@ class Request extends Base
 
     public function getId()
     {
-        return $this->getController() . '_' . $this->getAction() . '_' . (! empty($this->server["QUERY_STRING"]) ? '?' . $this->server["QUERY_STRING"] : '');
+        return $this->getAction(). (! empty($this->server["QUERY_STRING"]) ? '_'.base64_encode($this->server["QUERY_STRING"]) : '');
     }
 
     public function getValues()

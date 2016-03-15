@@ -3,8 +3,8 @@ require (__DIR__ . '/../vendor/autoload.php');
 if (is_file(__DIR__ . '/../config.php')) {
     require (__DIR__ . '/../config.php');
 }
-if (is_file(__DIR__ . '/../cache/config-user.php')) {
-    require (__DIR__ . '/../cache/config-user.php');
+if (is_file(__DIR__ . '/../data/cache/config-user.php')) {
+    require (__DIR__ . '/../data/cache/config-user.php');
 }
 require (__DIR__ . '/config-defaults.php');
 

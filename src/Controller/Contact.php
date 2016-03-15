@@ -25,7 +25,7 @@ class Contact extends Action
             'email' => $values
         );
         
-        $this->response->render('contact/show', $params);
+        return $this->response->render('contact/show', $params);
     }
 
     public function send($params = array())
@@ -35,7 +35,7 @@ class Contact extends Action
             try {
                 if ($params->isValid() && $this->mailer->sendEmail($params)) {
                     $this->response->addFlash('Votre message a été envoyé avec succès, merci !', OK);
-                    $this->response->redirect('contact.html#email');
+                    return $this->response->redirect('contact.html#email');
                 }
             } catch (\Exception $e) {
                 $params->prepareToPrintForm();

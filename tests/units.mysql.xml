@@ -1,0 +1,11 @@
+<phpunit stopOnError="true" stopOnFailure="true" colors="true">
+    <testsuites>
+        <testsuite name="Units">
+            <directory>.</directory>
+        </testsuite>
+    </testsuites>
+    <php>
+        <const name="DB_DRIVER" value="mysql" />
+        <const name="DB_NAME" value="cepsaintmaur_unit_test" />
+    </php>
+</phpunit>

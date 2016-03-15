@@ -14,7 +14,7 @@ class NewsTest extends Base
         $twoDayBefore = date('d/m/Y', time()-60*60*24*2);
         $tomorowTimestamp = $now+60*60*24;
         $tomorow = date('d/m/Y', $tomorowTimestamp);
-        $manyDaysAfterTimestamp = $now+60*60*24*10000;
+        $manyDaysAfterTimestamp = $now+60*60*24*1000;
         $manyDaysAfter = date('d/m/Y', $manyDaysAfterTimestamp);
         
         $u = new News($this->container);
@@ -92,7 +92,7 @@ class NewsTest extends Base
     public function testGetAll()
     {
         $yesterday = date('d/m/Y', time()-60*60*24);
-        $manyDaysAfter = date('d/m/Y', time()+60*60*24*10000);
+        $manyDaysAfter = date('d/m/Y', time()+60*60*24*1000);
     
         $u = new News($this->container);
         $this->assertEmpty($u->getAll(0, 2));
