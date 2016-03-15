@@ -3,83 +3,66 @@ namespace Core;
 
 use RuntimeException;
 use Filter\Filterable;
-use Filter\SecurityFilter;
-use Filter\CacheFilter;
 
 class Router extends Base
 {
 
-    private $_defaults = array(
-        'module' => 'content',
-        'action' => 'index'
-    );
+    private $filters = array();
 
-    private $_filters = array();
-    // $cacheFilter = new CacheFilter($this);
-    // $this->addFilter($cacheFilter);
-    // $securityFilter = new SecurityFilter($this);
-    // $this->addFilter($securityFilter);
-    public function dispatch($defaults = null)
+    public function addFilter(Filterable $filter)
+    {
+        $this->filters[] = $filter;
+    }
+    
+    public function dispatch()
     {
         try {
-            if (null != $defaults && '' != $defaults && count($defaults) > 0) {
-                $this->_defaults = $defaults;
-            }
-            
-            $parsed = $this->request->route($this->_defaults);
+            $this->request->matchRoute();
             
             $pass = true;
-            foreach ($this->_filters as $filter) {
+            foreach ($this->filters as $filter) {
                 $pass *= $filter->preFilter();
             }
             
             if ($pass) {
-                $this->forward($parsed['module'], $parsed['action']);
+                $this->forward($this->request);
                 
-                foreach (array_reverse($this->_filters) as $filter) {
+                foreach (array_reverse($this->filters) as $filter) {
                     $filter->postFilter();
                 }
             }
         } catch (\Exception $e) {
-            $this->_launchException($e)->printOut();
+            $this->launchException($e)->printOut();
         }
     }
 
-    public function forward($module, $action, $params = null)
+    public function forward(Request $request)
     {
-        $instance = $this->_getAction($module, $action);
-        $instance->{$action}();
+        $this->response->addVar('controller', $request->getController());
+        $this->response->addVar('action', $request->getAction());
+        $instance = $this->getController($request->getController(), $request->getAction());
+        $instance->{$request->getAction()}();
     }
 
-    public function addFilter(Filterable $filter)
+    private function getController($controller, $action)
     {
-        $this->_filters[] = $filter;
-    }
-
-    private function _getAction($module, $action)
-    {
-        $this->response->addVar('module', $module);
-        $this->response->addVar('action', $action);
-        $class = '\\Controller\\' . ucfirst($module);
+        $class = '\\Controller\\' . ucfirst($controller);
         if (! class_exists($class)) {
-            throw new RuntimeException('Controller not found');
+            throw new RuntimeException('Controller "'.$controller.'" not found');
         }
-        
         if (! method_exists($class, $action)) {
-            throw new RuntimeException('Action not implemented');
+            throw new RuntimeException('Action "'.$controller.'::'.$action.'" not implemented');
         }
-        
         $instance = new $class($this->container);
         return $instance;
     }
 
-    private function _launchException($e)
+    private function launchException($e)
     {
-        $error = $e->__toString();
-        $this->response->addVar('error', $error);
-        if ($e instanceof MVCException) {
+        $this->response->addVar('error', $e->__toString());
+        if ($e instanceof RuntimeException) {
             $this->response->addVar('metaTitle', 'Erreur - Page introuvable');
-            $this->response->addVar('page', $e->getPage());
+            $this->response->addVar('page', $this->request->getRoute());
             $this->response->render('error/404');
         }
         else {

@@ -1,42 +1,32 @@
 <?php
 namespace Filter;
 
-use Service\CacheManager;
+use Core\Base;
 
-class CacheFilter implements Filterable
+class CacheFilter extends Base implements Filterable
 {
 
-	protected $_controler;
+    public function preFilter()
+    {
+        if ($this->cacheManager->isEnabled()) {
+            // Cache available
+            if (false !== ($pageData = $this->cacheManager->retrieve())) {
+                $this->response->setBody($pageData);
+                $this->response->printOut();
+                return false;
+            }
+            // Start create a cached version
+            ob_start();
+        }
+        return true;
+    }
 
-	protected $cacheManager;
-
-	public function __construct($controler)
-	{
-		$this->_controler = $controler;
-		$this->cacheManager = new CacheManager($this->_controler->getRequest()->getId(), $this->_controler->getRequest()->getModule(), ('administration' != $this->_controler->getRequest()->getModule() && 'upload' != $this->_controler->getRequest()->getModule() && 'POST' != $_SERVER['REQUEST_METHOD']));
-	}
-
-	public function preFilter()
-	{
-		// - Available in the cache
-		if (null !== ($pageData = $this->cacheManager->cachedVersion())) {
-			$this->_controler->getResponse()->setBody($pageData);
-			$this->_controler->getResponse()->printOut();
-			return false;
-		}
-		// - Generate
-		// Start the output filter for cache
-		ob_start();
-		return true;
-	}
-
-	public function postFilter()
-	{
-		if ($this->cacheManager->isCaching()) {
-			// - Cache the generated page
-			$this->cacheManager->cache(ob_get_contents());
-			// - Display the page
-			ob_end_flush();
-		}
-	}
+    public function postFilter()
+    {
+        if ($this->cacheManager->isEnabled()) {
+            // Finish create a cached version
+            $this->cacheManager->cache(ob_get_contents());
+            ob_end_flush();
+        }
+    }
 }

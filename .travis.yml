@@ -17,4 +17,4 @@ before_script:
   - php -i
 
 script:
-  - phpunit -c test/units.sqlite.xml
+  - phpunit -c tests/units.sqlite.xml

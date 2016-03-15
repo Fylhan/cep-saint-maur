@@ -14,6 +14,9 @@
 		"fguillot/picodb" : "1.0.4",
 		"pimple/pimple" : "~3.0"
 	},
+	"require-dev" : {
+        "phpunit/phpunit" : "5.1.*"
+    },
 	"autoload" : {
 		"psr-0" : {
 			"" : "src/"

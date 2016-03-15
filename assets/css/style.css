@@ -901,7 +901,7 @@ img.logoFlambeaux {
 	color: #C00;
 }
 
-#content #administrationPage form .mini {
+#content form .mini {
 	display: inline;
 	float: none;
 	clear: none;

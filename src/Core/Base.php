@@ -14,6 +14,8 @@ use Pimple\Container;
  * @property \Model\News                                  $news
  * @property \Model\Upload                                $upload
  * @property \PicoDb\Database                             $db
+ * @property \Service\Auth                                $auth
+ * @property \Service\CacheManager                        $cacheManager
  * @property \Service\Feeder                              $feeder
  * @property \Service\Mailer                              $mailer
  * @property \Service\Uploader                            $uploader

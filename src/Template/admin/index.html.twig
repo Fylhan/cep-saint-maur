@@ -65,15 +65,15 @@
 
 <p>Vous pouvez modifier les pages listées ci-dessous. Pour en ajouter une, demander à un administrateur.</p>
 <ul>
-	<li><a href="administration-update-page.html?url=contact" class="update" title="Modifier &quote; Nous contacter &quote;">Nous contacter</a></li>
-	<li><a href="administration-update-page.html?url=presentation" class="update" title="Modifier &quote; Nous connaître &quote;">Nous connaître</a></li>
-	<li><a href="administration-update-page.html?url=activities" class="update" title="Modifier &quote; Nos activités &quote;">Nos activités</a></li>
-	<li><a href="administration-update-page.html?url=help" class="update" title="Modifier &quote; Politique d'accessibilité &quote;">Politique d'accessibilité</a></li>
+	{% for content in contents %}
+		<li><a href="administration-update-page.html?url={{ content.url }}" class="update" title="Modifier &quote; {{ content.title }} &quote;">{{ content.title }}</a> <small>- dernière màj le {{ content.date_update|date('d/m/y') }}</small></li>
+	{% endfor %}
 </ul>
 
 
 <h2><a href="galery.html">Gérer les fichiers / images</a></h2>
-
+<p>Vous pouvez visualiser les fichiers et les images mis en ligne et éventuellement les supprimer.</p>
+ 
 <h2>Gérer les paramètres</h2>
 <p>Quelques paramêtre du sites sont configurables ci-dessous. Faites bien attention ;-)</p>
 <form action="administration-update-data.html" method="post" id="formData" class="form">
@@ -94,7 +94,7 @@
 		</div>
 		<div>
 			<label for="emailAdmin">Email de l'administrateur</label>
-				<input type="email" name="EmailAdmin" id="emailAdmin" value="{{EmailAdmin}}" tabindex="{% set tabindex = tabindex+1 %}{{ tabindex }}" />
+				<input type="email" name="EmailAdmin" id="emailAdmin" value="{{EmailAdmin}}" class="mini" tabindex="{% set tabindex = tabindex+1 %}{{ tabindex }}" />
 		</div>
 		<div>
 			<label for="displayHelp">Afficher les conseils</label>

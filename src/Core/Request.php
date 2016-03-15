@@ -22,7 +22,7 @@ class Request extends Base
 
     private $cookies;
 
-    private $route;
+    private $attributes;
 
     /**
      * Constructor
@@ -38,17 +38,6 @@ class Request extends Base
         $this->post = empty($post) ? $_POST : $post;
         $this->files = empty($files) ? $_FILES : $files;
         $this->cookies = empty($cookies) ? $_COOKIE : $cookies;
-    }
-
-    public function route($defaults = null)
-    {
-        $module = getModule();
-        $action = getAction();
-        $this->route = array(
-            'module' => (NULL != $module ? $module : $defaults['module']),
-            'action' => (NULL != $action ? $action : $defaults['action'])
-        );
-        return $this->route;
     }
 
     public function isPost()
@@ -83,29 +72,39 @@ class Request extends Base
         return $defaultValue;
     }
 
-    public function getRoute()
+    public function matchRoute()
     {
-        return $this->route;
+        $this->attributes = array(
+            '_controller' => parserUrl($this->get['controller'], false, false),
+            '_action' => parserUrl($this->get['action'], false, false)
+        );
+        $this->attributes['_route'] = $this->getController().'/'.$this->getAction();
+        return $this->attributes;
     }
 
-    public function getModule()
+    public function setAttributes($attributes)
     {
-        return $this->route['module'];
+        $this->attributes = $attributes;
+    }
+
+    public function getRoute()
+    {
+        return $this->attributes['_route'];
+    }
+
+    public function getController()
+    {
+        return $this->attributes['_controller'];
     }
 
     public function getAction()
     {
-        return $this->route['action'];
-    }
-
-    public function setRoute($route)
-    {
-        $this->route = $route;
+        return $this->attributes['_action'];
     }
 
     public function getId()
     {
-        return getModule() . '_' . getAction() . '_' . (! empty($_SERVER["QUERY_STRING"]) ? '?' . $_SERVER["QUERY_STRING"] : '');
+        return $this->getController() . '_' . $this->getAction() . '_' . (! empty($this->server["QUERY_STRING"]) ? '?' . $this->server["QUERY_STRING"] : '');
     }
 
     public function getValues()

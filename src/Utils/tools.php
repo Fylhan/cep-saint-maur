@@ -68,7 +68,7 @@ function secure($var, $level = 0)
 
 /**
  * Test si un email est valide
- * 
+ *
  * @param $email Email
  *            à tester
  * @return true si c'est un email
@@ -81,7 +81,7 @@ function isEmailValide($email)
 
 /**
  * Test si un tel est valide
- * 
+ *
  * @param $tel tel
  *            à tester
  * @return true si c'est un tel
@@ -194,7 +194,7 @@ function dateFr($timestamp, $heure = true, $le = true)
 /**
  * Parse une date au format DATE_RFC822
  * Il existe date(DATE_RFC822, timestamp), mais le serveur Flamb'clair ne le connait pas
- * 
+ *
  * @param int $timestamp
  *            Timestamp à parser
  */
@@ -205,7 +205,7 @@ function dateToRFC822($timestamp)
 
 /**
  * Formate la date d'un événement
- * 
+ *
  * @param $timestamp Timestamp            
  * @return La date formatée
  */
@@ -236,7 +236,7 @@ function salut()
 
 /**
  * Récupére le tri séléctionné
- * 
+ *
  * @return int Le tri séléctionné
  */
 function getTri()
@@ -272,7 +272,7 @@ function getRecherche()
 
 /**
  * Calcul le type de tri SQL é effectuer en fonction du tri séléction
- * 
+ *
  * @param string $tri
  *            Tri séléctionné
  * @return int Le tri é effectuer
@@ -284,7 +284,7 @@ function calculSqlTri($tri)
 
 /**
  * Calcul le type de tri pour l'url à afficher en fonction du tri séléctionné
- * 
+ *
  * @param string $tri
  *            Tri séléctionné
  * @return int Le tri é effectuer
@@ -296,7 +296,7 @@ function calculUrlTri($tri, $default)
 
 /**
  * Calcul la page sur laquelle on se trouve en fonction de l'environnement
- * 
+ *
  * @return int La page actuelle
  */
 function calculPage()
@@ -318,7 +318,7 @@ function calculPage()
 /**
  * Calcul le nombre d'éléments total en fonction de l'environnement
  * @pre Une requéte avec SQL_FOUND_ROWS() a précédement été réalisée
- * 
+ *
  * @param int $nbParPage
  *            Nombre d'éléments par page
  * @return int Le nombre d'éléments
@@ -334,7 +334,7 @@ function calculNbElmnt()
 /**
  * Calcul la nombre de pages totales en fonction de l'environnement
  * @pre Une requête avec SQL_FOUND_ROWS() a précédement été réalisée
- * 
+ *
  * @param int $nbParPage
  *            Nombre d'éléments par page
  * @return int Le nombre de pages
@@ -356,7 +356,7 @@ function echa($array)
 
 /**
  * Clean une chaine de caractères pour l'url rewriting
- * 
+ *
  * @param string $url
  *            Chaine de caractères à cleaner
  * @param boolean $elag
@@ -458,7 +458,7 @@ function endsWith($haystack, $needle, $case = true)
 
 /**
  * Retourne l'url de l'image si une image existe dans ce dossier avec ce nom
- * 
+ *
  * @param string $dossierOuChercher)            
  * @param string $nomImage
  *            (sans extension)
@@ -492,7 +492,7 @@ function isImage($dossierOuChercher, $nomImage)
 
 /**
  * Tronque un texte pour qu'il fasse $longueur caractères et y ajoute "..." si besoins
- * 
+ *
  * @param string $txt
  *            Texte à tronquer
  * @param int $longueur
@@ -601,62 +601,6 @@ function getUrlPagePrecedente($urlDefault)
 function getLocale()
 {
     return DefaultLocale;
-}
-
-/**
- * Récupère le module de la page courante
- * 
- * @return string Le module de la page courante
- */
-function getModule()
-{
-    if (isset($_GET['module']) && $_GET['module'] != NULL) {
-        $module = parserUrl($_GET['module'], false, false);
-    }
-    else 
-        if (isset($_POST['module']) && $_POST['module'] != NULL) {
-            $module = parserUrl($_POST['module'], false, false);
-        }
-        else 
-            if (isset($_COOKIES['module']) && $_COOKIES['module'] != NULL) {
-                $module = parserUrl($_COOKIES['module'], false, false);
-            }
-            else 
-                if (isset($_SESSION['module']) && $_SESSION['module'] != NULL) {
-                    $module = parserUrl($_SESSION['module'], false, false);
-                }
-                else {
-                    $module = '';
-                }
-    return $module;
-}
-
-/**
- * Récupère l'action de la page courante
- * 
- * @return string L'action de la page courante
- */
-function getAction()
-{
-    if (isset($_GET['action']) && $_GET['action'] != NULL) {
-        $action = parserUrl($_GET['action'], false, false);
-    }
-    else 
-        if (isset($_POST['action']) && $_POST['action'] != NULL) {
-            $action = parserUrl($_POST['action'], false, false);
-        }
-        else 
-            if (isset($_COOKIES['action']) && $_COOKIES['action'] != NULL) {
-                $action = parserUrl($_COOKIES['action'], false, false);
-            }
-            else 
-                if (isset($_SESSION['action']) && $_SESSION['action'] != NULL) {
-                    $action = parserUrl($_SESSION['action'], false, false);
-                }
-                else {
-                    $action = '';
-                }
-    return $action;
 }
 
 function br2nl($str)

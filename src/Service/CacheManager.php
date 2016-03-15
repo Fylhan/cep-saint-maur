@@ -1,126 +1,95 @@
 <?php
 namespace Service;
 
-class CacheManager
+use Core\Base;
+
+class CacheManager extends Base
 {
 
-    /**
-     * Full URL of the page to cache (typically the value returned by pageUrl())
-     *
-     * @var string
-     */
-    private $url;
-
-    /**
-     * Name of the cache file for this url
-     *
-     * @var string
-     */
-    private $filename;
-
-    /**
-     * Should this url be cached ?
-     *
-     * @var boolean
-     */
-    private $shouldBeCached;
-
-    /**
-     * Flag to know if a cache is in progress or not
-     *
-     * @var boolean
-     */
-    private $caching;
-
-    /**
-     *
-     * @param $url =
-     *            url (typically the value returned by pageUrl())
-     * @param $shouldBeCached =
-     *            boolean. If false, the cache will be disabled.
-     */
-    public function __construct($url, $subFolder = '', $shouldBeCached = true)
+    public function getCacheDir($controller = null)
     {
-        $this->url = $url;
-        $this->cacheFolder = CACHE_PATH . '/' . (NULL != $subFolder && '' != $subFolder ? $subFolder . (endsWith($subFolder, '/') ? '' : '/') : '');
-        $this->filename = $this->cacheFolder . md5($url) . '.cache';
-        $this->shouldBeCached = $shouldBeCached;
-        $this->caching = $this->isEnabled();
+        return CACHE_PATH . '/' . (! empty($controller) ? $controller : $this->request->getController());
     }
 
-    /**
-     * If the page should be cached and a cached version exists
-     * returns the cached version (otherwise, return null).
-     *
-     * @return string null version
-     */
-    public function cachedVersion()
+    public function getCacheFilepath()
     {
-        if (! $this->isEnabled())
-            return null;
-        if (is_file($this->filename)) {
-            $this->caching = false;
-            return file_get_contents($this->filename);
-            exit();
-        }
-        return null;
+        return $this->getCacheDir() . '/' . $this->request->getId() . '.cache';
+    }
+
+    public function isEnabled()
+    {
+        return (! $this->request->isPost() && ! in_array($this->request->getController(), array(
+            'admin',
+            'upload'
+        )));
     }
 
     /**
      * Put a page in the cache.
+     *
+     * @param string $data
+     *            Data to be stored to cache
+     * @return int This function returns the number of bytes that were written to the file, or false on failure
      */
-    public function cache($page)
+    public function cache($data)
     {
-        if (! $this->isEnabled())
-            return;
-        if (! is_dir($this->cacheFolder)) {
-            mkdir($this->cacheFolder, 0705, true);
-            chmod($this->cacheFolder, 0705);
-        }
-        file_put_contents($this->filename, $page);
-    }
-
-    public static function resetCache($all = false)
-    {
-        CacheManager::purgeCache('api');
-        CacheManager::purgeCache('accueil');
-        if ($all) {
-            CacheManager::purgeCache('contact');
-            CacheManager::purgeCache('default');
-            CacheManager::purgeCache('twig');
-            CacheManager::purgeCache('email');
+        try {
+            if (! is_dir($this->getCacheDir())) {
+                mkdir($this->getCacheDir(), 0755, true);
+            }
+            return file_put_contents($this->getCacheFilepath(), $data);
+        } catch (\Exception $e) {
+            logThatException($e);
+            return false;
         }
     }
 
     /**
-     * Purge the whole cache.
-     * (call with pageCache::purgeCache())
+     * Retrieve cache if any
+     *
+     * @return false if there is no cache or the cached data
      */
-    public static function purgeCache($subFolder)
+    public function retrieve()
     {
-        $cacheFolder = CACHE_PATH . '/' . (NULL != $subFolder && '' != $subFolder ? $subFolder . (endsWith($subFolder, '/') ? '' : '/') : '');
-        CacheManager::rrmdir($cacheFolder);
-        // if (is_dir($cacheFolder)) {
-        // $handler = opendir($cacheFolder);
-        // if ($handler !== false) {
-        // while (($filename = readdir($handler)) !== false) {
-        // if (endsWith($filename, '.cache')) {
-        // unlink($cacheFolder . $filename);
-        // }
-        // }
-        // closedir($handler);
-        // }
-        // }
+        if (is_file($this->getCacheFilepath())) {
+            return file_get_contents($this->getCacheFilepath());
+        }
+        return false;
     }
 
-    public static function rrmdir($dir)
+    /**
+     * Purge cache of news and content controller, or all controllers
+     *
+     * @param string $all            
+     */
+    public function resetCache($all = false)
+    {
+        $this->purgeCache('feed');
+        $this->purgeCache('sitemap');
+        $this->purgeCache('content');
+        if ($all) {
+            $this->purgeCache('contact');
+            $this->purgeCache('twig');
+            $this->purgeCache('email');
+        }
+    }
+
+    /**
+     * Purge the whole cache of one controller
+     */
+    public function purgeCache($controller)
+    {
+        $this->rrmdir($this->getCacheDir($controller));
+    }
+
+    public function rrmdir($dir)
     {
         if (is_dir($dir)) {
             $objects = scandir($dir);
             foreach ($objects as $object) {
                 if ($object != "." && $object != "..") {
                     if (filetype($dir . "/" . $object) == "dir")
-                        CacheManager::rrmdir($dir . "/" . $object);
+                        $this->rrmdir($dir . "/" . $object);
                     else
                         unlink($dir . "/" . $object);
                 }
@@ -128,15 +97,5 @@ class CacheManager
             reset($objects);
             rmdir($dir);
         }
-    }
-
-    public function isEnabled()
-    {
-        return CacheEnabled && $this->shouldBeCached;
-    }
-
-    public function isCaching()
-    {
-        return $this->caching;
     }
 }

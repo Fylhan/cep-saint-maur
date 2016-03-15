@@ -18,7 +18,7 @@
 <form action="{{ UrlCourant }}" method="post" id="formNews" class="form">
 	<div>
 		<label for="title">Titre</label>
-			<input type="text" name="title" id="title" value="{{Actualite.titre}}" placeholder="Titre" size="25" tabindex="{% set tabindex = tabindex+1 %}{{ tabindex }}" />
+			<input type="text" name="title" id="title" value="{{Actualite.titre}}" placeholder="Titre" size="25" />
 	</div>
 	<div>
 		<label for="content" class="requis">Contenu</label>
@@ -26,20 +26,20 @@
 	</div>
 	<div>
 		<label for="date_start">Date de début<br />de l'affichage</label>
-			<input type="date" name="date_start" id="date_start" value="{{Actualite.dateTimeStart|date('d/m/Y')}}" tabindex="{% set tabindex = tabindex+1 %}{{ tabindex }}" />
+			<input type="date" name="date_start" id="date_start" value="{{Actualite.dateTimeStart|date('d/m/Y')}}" />
 	
 		<label for="date_end">Date de fin<br />de l'affichage</label>
-			<input type="date" name="date_end" id="date_end" value="{{Actualite.dateTimeEnd|date('d/m/Y')}}" tabindex="{% set tabindex = tabindex+1 %}{{ tabindex }}" />
+			<input type="date" name="date_end" id="date_end" value="{{Actualite.dateTimeEnd|date('d/m/Y')}}" />
 	</div>
 	<div>
 		<label for="state">Etat</label>
-			<select name="state" id="state" class="mini" tabindex="{% set tabindex = tabindex+1 %}{{ tabindex }}">
+			<select name="state" id="state" class="mini">
 				<option value="1"{{ 1 == Actualite.etat ? ' selected="selected"' : '' }}>Activé</option>
 				<option value="0"{{ 0 == Actualite.etat ? ' selected="selected"' : '' }}>Désactivé</option>
 			</select>
 	</div>
 	<div class="formEnd">
-		<input type="submit" name="sendNews" id="sendNews" value="{% if 0 == Actualite.id %}Ajouter{% else %}Modifier{% endif %}" tabindex="{% set tabindex = tabindex+1 %}{{ tabindex }}" class="mini" />
+		<input type="submit" name="sendNews" id="sendNews" value="{% if 0 == Actualite.id %}Ajouter{% else %}Modifier{% endif %}" />
 		<input type="hidden" name="id" id="id" value="{{Actualite.id}}" />
 		<a href="administration.html">Annuler</a>
 	</div>

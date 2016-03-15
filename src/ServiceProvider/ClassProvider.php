@@ -18,6 +18,8 @@ class ClassProvider implements ServiceProviderInterface
             'Upload'
         ),
         'Service' => array(
+            'Auth',
+            'CacheManager',
             'Feeder',
             'Mailer',
             'Uploader'

@@ -33,6 +33,7 @@ if (CompressionEnabled)
 $container = new Pimple\Container();
 $container->register(new \ServiceProvider\ClassProvider());
 $container->register(new \ServiceProvider\DatabaseProvider());
+$container->register(new \ServiceProvider\RouteProvider());
 $container['template'] = function ($c) {
     return new \Twig_Environment(new \Twig_Loader_Filesystem(array(
         SRC_PATH . '/Template/'
@@ -41,7 +42,4 @@ $container['template'] = function ($c) {
         'debug' => DEBUG,
         'charset' => Encodage
     ));
-};
-$container['router'] = function ($c) {
-    return new \Core\Router($c);
 };

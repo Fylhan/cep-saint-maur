@@ -27,21 +27,6 @@ class News extends Base
         return $query;
     }
 
-    /**
-     * Return true if a news exists for a given project
-     *
-     * @access public
-     * @param integer $news_id
-     *            News id
-     * @return boolean
-     */
-    public function exists($news_id)
-    {
-        return $this->db->table(self::TABLE)
-            ->eq('id', $news_id)
-            ->exists();
-    }
-
     public function getLastUpdate()
     {
         $lastUpdate = $this->db->table(self::TABLE)

@@ -1,8 +1,9 @@
 <nav id="menu" role="navigation">
 	<ul>
 		<li><a href="{{ SitePath }}" title="Accueil et événements">Accueil</a></li>
-		<li><a href="contact.html" {{ module == 'contact' ? ' class="select"' : '' }}>Nous contacter</a></li>
+		<li><a href="contact.html" {{ controller == 'contact' ? ' class="select"' : '' }}>Nous contacter</a></li>
 		<li><a href="qui-sommes-nous.html"{{ action == 'presentation' ? ' class="select"' : '' }}>Nous connaître</a></li>
-		<li class="last"><a href="activites.html"{{ action == 'activities' ? ' class="select"' : '' }}>Nos activités</a></li>
+		<li><a href="activites.html"{{ action == 'activities' ? ' class="select"' : '' }}>Nos activités</a></li>
+		<li class="last"><a href="evenements.html"{{ controller == 'news' ? ' class="select"' : '' }}>Evénements</a></li>
 	</ul>
 </nav>

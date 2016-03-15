@@ -5,10 +5,10 @@ class HumanUrlEntry extends UrlEntry {
 	private $title;
 	private $description;
 
-	public function __construct($title, $loc, $lastmod='', $changefreq='', $priority=0.5) {
+	public function __construct($title, $loc, $lastmod='', $changefreq='', $priority=0.5, $description='') {
 		parent::__construct($loc, $lastmod, $changefreq, $priority);
 		$this->title = $title;
-		$this->description = "";
+		$this->description = $description;
 	}
 	
 	

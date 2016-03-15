@@ -22,21 +22,6 @@ class Upload extends Base
     }
 
     /**
-     * Return true if it exists
-     *
-     * @access public
-     * @param integer $id
-     *            Id
-     * @return boolean
-     */
-    public function exists($id)
-    {
-        return $this->db->table(self::TABLE)
-            ->eq('id', $id)
-            ->exists();
-    }
-
-    /**
      * Get by the id
      *
      * @access public
@@ -70,9 +55,9 @@ class Upload extends Base
      */
     public function prepare(array $values)
     {
+        $values['date'] = time();
         unset($values['ack']);
         unset($values['dir']);
-        $values['date'] = time();
         return $values;
     }
 

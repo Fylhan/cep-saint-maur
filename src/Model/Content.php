@@ -19,20 +19,6 @@ class Content extends Base
     }
 
     /**
-     *
-     * @access public
-     * @param string $url
-     *            Content url
-     * @return boolean
-     */
-    public function exists($url)
-    {
-        return $this->db->table(self::TABLE)
-            ->eq('url', $url)
-            ->exists();
-    }
-
-    /**
      * Date of the last update of a page
      *
      * @access public
