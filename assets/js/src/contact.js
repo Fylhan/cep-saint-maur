@@ -34,7 +34,7 @@ $(document).ready(function(){
 			// Load the map
 			if (!mapLoaded) {
 				mapLoader.insertBefore('#map');
-				$.getScript('assets/js/openlayers.js', function() {
+				$.getScript('assets/js/vendor/openlayers.js', function() {
 					initMap('map');
 					mapLoader.hide();
 				}, function() {

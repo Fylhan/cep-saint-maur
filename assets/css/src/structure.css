@@ -1,0 +1,156 @@
+/* Menu */
+#header { /*min-width: 580px;*/
+    margin: 0 150px 30px 260px;
+    padding: 10px 0 20px 0;
+    border: 1px solid #5AA3CF;
+    background-color: rgb(41, 97, 140);
+    background-color: rgba(80, 87, 103, 0.49);
+    -moz-box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.55);
+    -o-box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.55);
+    -webkit-box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.55);
+    box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.55);
+}
+
+@media screen and (max-width: 1000px) {
+    #header {
+        margin: 0 20px;
+    }
+}
+
+@media screen and (max-width: 350px) {
+    #header {
+        margin: 0 1px;
+    }
+}
+
+#header h1 {
+    text-transform: uppercase;
+    margin: 0 auto;
+    padding: 0;
+}
+
+#header p {
+    letter-spacing: 6px;
+    word-spacing: 20px;
+    text-transform: uppercase;
+    font-size: 0.9em;
+    margin: 0 auto;
+    padding: 0;
+}
+
+/* Footer */
+footer {
+    clear: both;
+    /*min-width: 580px;*/
+    margin: 30px 150px 10px 220px;
+    padding: 0;
+    font-size: 0.7em;
+    color: white;
+    text-align: center;
+}
+
+footer p {
+    float: left;
+    text-align: left;
+    margin: 2px 0 5px 0;
+    padding: 0;
+}
+
+footer p.membership {
+    float: right;
+    text-align: right;
+}
+
+.page p.membership {
+    float: right;
+    text-align: right;
+}
+
+p.membership a {
+    display: inline-block;
+    text-indent: -2500px;
+    color: rgba(1, 1, 1, 0);
+}
+
+p.membership a.cnef {
+    background: url(../img/cnef.png) no-repeat bottom left;
+    width: 32px;
+    height: 34px;
+    position: relative;
+    top: -8px;
+}
+
+p.membership a.caef {
+    background: url(../img/caef.png) no-repeat bottom left;
+    width: 43px;
+    height: 12px;
+    position: relative;
+    top: 1px;
+}
+
+p.membership a:hover {
+    background-position: top left;
+}
+
+footer ul {
+    margin: 0;
+    padding: 0;
+}
+
+footer ul li {
+    display: inline;
+    margin: 0;
+    padding: 0;
+}
+
+footer ul li:after {
+    content: '|';
+    color: white;
+    margin-left: 5px;
+}
+
+footer ul li.last:after {
+    content: '';
+    margin: 0;
+}
+
+footer ul li a {
+    color: white;
+}
+
+@media screen and (max-width: 1000px) {
+    footer {
+        margin: 30px 20px 10px 20px;
+    }
+}
+
+@media screen and (max-width: 700px) {
+    footer p.membership {
+        clear: left;
+        float: left;
+    }
+}
+
+@media screen and (max-width: 350px) {
+    footer {
+        margin: 20px 1px 2px 1px;
+    }
+}
+
+/* Content */
+#content {
+    margin: 30px 20px 20px 20px;
+    padding: 0;
+}
+
+@media screen and (max-width: 350px) {
+    #content {
+        margin: 20px 1px 20px 1px;
+    }
+}
+
+@media screen and (min-width: 1000px) {
+    #content {
+        margin: 0 150px 20px 260px;
+    }
+}

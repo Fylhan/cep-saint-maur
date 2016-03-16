@@ -52,24 +52,4 @@ Quelques limitations :</p>
 		<input type="hidden" name="FBURLINVALID_L" id="listInvalid" value="http://kundenserver.de/mailinglist/invalid.fr.html">
 	</div>
 </form>
-
-
 {% endblock AdministrationBody %}
-
-{% block js %}
-<script type="text/javascript" src="{{JsPath}}jquery.min.js"></script>
-<script type="text/javascript">
-$(function(){
-	// -- Conseil
-	$('.conseilHandler').click(function() {
-		$(this).parent().find('div').toggle('slow');
-	});
-
-	// -- Diffusion list selected
-	$('#listSelection').change(function() {
-		$('#listSelected').val($('#listSelection>option:selected').text());
-	});
-});
-</script>
-{{ parent() }}
-{% endblock js %}

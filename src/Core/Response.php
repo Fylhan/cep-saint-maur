@@ -41,8 +41,7 @@ class Response extends Base
 
     public function render($tplPath, $params = array())
     {
-        // -- Ajout des params par défaut
-        $globalParams = array(
+        $this->response->addVars(array(
             'SitePath' => SITE_PATH,
             'SiteNom' => SiteNom,
             'SiteDesc' => SiteDesc,
@@ -60,17 +59,9 @@ class Response extends Base
             'controller' => $this->request->getController(),
             'action' => $this->request->getAction(),
             'FlashMessage' => @$this->response->getFlash()
-        );
-        // -- Préparation des paramêtres
-        $this->response->addVars($globalParams);
+        ));
         $this->response->addVars($params);
         
-        // -- Minify CSS and JS (TODO: move somewhere else)
-        if (DEBUG) {
-            $this->minifyCssJs();
-        }
-        
-        // Create body
         $tpl = $this->template->loadTemplate($tplPath . '.html.twig');
         $body = $tpl->render($this->response->getVars());
         $this->setBody($body);
@@ -93,30 +84,6 @@ class Response extends Base
         $this->setBody('json' === $type ? json_encode($data) : $data);
         $this->printOut();
         return true;
-    }
-
-    public function minifyCssJs()
-    {
-        $cssFiles = array(
-            'ie',
-            'highlight-default',
-            'redactor',
-            'style'
-        );
-        foreach ($cssFiles as $cssFile) {
-            if (! is_file(CSS_PATH . '/' . $cssFile . '.min.css')) {
-                file_put_contents(CSS_PATH . '/' . $cssFile . '.min.css', minifyCss(file_get_contents(ASSETS_PATH . '/css/' . $cssFile . '.css')));
-            }
-        }
-        $jsFiles = array(
-            'html5',
-            'contact'
-        );
-        foreach ($jsFiles as $jsFile) {
-            if (! is_file(JS_PATH . '/' . $jsFile . '.min.js')) {
-                file_put_contents(JS_PATH . '/' . $jsFile . '.min.js', minifyJs(file_get_contents(ASSETS_PATH . '/js/' . $jsFile . '.js')));
-            }
-        }
     }
 
     public function addBlock($key, $block)

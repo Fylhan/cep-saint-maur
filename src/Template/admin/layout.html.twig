@@ -12,3 +12,11 @@
 	{% endblock %}
 </article>
 {% endblock content %}
+
+{% block css %}
+<link rel="stylesheet" type="text/css" title="{{SiteNom}} - Admin" href="{{CssPath}}admin.min.css" />
+{% endblock %}
+
+{% block js %}
+<script src="{{JsPath}}admin.min.js"></script>
+{% endblock %}

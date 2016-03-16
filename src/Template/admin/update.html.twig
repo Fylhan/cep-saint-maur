@@ -22,7 +22,7 @@
 	</div>
 	<div>
 		<label for="content" class="requis">Contenu</label>
-			<textarea name="content" id="content" rows="25" class="editor" placeholder="Si vous avez quelque chose à nous dire, c'est ici !" tabindex="{% set tabindex = tabindex+1 %}{{ tabindex }}">{{Actualite.contentRaw}}</textarea>
+			<textarea name="content" id="content" rows="25" class="editorNews" placeholder="Si vous avez quelque chose à nous dire, c'est ici !" tabindex="{% set tabindex = tabindex+1 %}{{ tabindex }}">{{Actualite.contentRaw}}</textarea>
 	</div>
 	<div>
 		<label for="date_start">Date de début<br />de l'affichage</label>
@@ -46,61 +46,3 @@
 </form>
 
 {% endblock %}
-
-
-{% block css %}
-{{ parent() }}
-<link rel="stylesheet" href="{{CssPath}}redactor.min.css" />
-<link type="text/css" rel="stylesheet" href="{{CssPath}}ui-lightness/jquery-ui.min.css" />
-{% endblock css %}
-
-{% block js %}
-{{ parent() }}
-<script type="text/javascript" src="{{JsPath}}jquery.min.js"></script>
-<script type="text/javascript" src="{{JsPath}}jquery-ui.js"></script>
-<script type="text/javascript" src="{{JsPath}}jquery.ui.datepicker-fr.js"></script>
-<script type="text/javascript" src="{{JsPath}}redactor.js"></script>
-<script type="text/javascript" src="{{JsPath}}redactor-fr.js"></script>
-<script type="text/javascript">
-$(document).ready(function(){
-	// -- Editor
-	var buttons = ['html', '|', 'formatting', '|', 'bold', 'italic', 'deleted', '|',
-	               		'fontcolor', 'backcolor', '|',
-	                   'unorderedlist', 'orderedlist', 'outdent', 'indent', '|',
-	                   'alignleft', 'aligncenter', 'alignright', 'justify', '|',
-	                   'link', 'image', 'file', 'video',  '|',
-	                   'more']
-	$('.editor').redactor({
-		lang: 'fr',
-		imageUpload: 'upload-picture.html',
-		fileUpload: 'upload-file.html',
-		imageGetJson: 'galery.json',
-		minHeight: '200',
-		buttons: buttons,
-		buttonsCustom: {
-			more: {
-				title: 'More',
-				callback: buttonMore
-			}
-		}  
-	});
-
-	// -- Date picket
-	$.datepicker.setDefaults( $.datepicker.regional['fr'] );
-	$('#date_start').datepicker({'dateFormat': 'dd/mm/yy'});
-	$('#date_end').datepicker({'dateFormat': 'dd/mm/yy'});
-
-	// -- Conseil
-	$('.conseilHandler').click(function() {
-		$(this).parent().find('ul').toggle('slow');
-	});
-});
-
-function buttonMore(obj, event, key)
-{
-	obj.execCommand('insertHtml', '[Lire la suite]');
-}
-</script>
-{% endblock js %}
-
-

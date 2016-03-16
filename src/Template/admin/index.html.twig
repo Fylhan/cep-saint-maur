@@ -105,18 +105,4 @@
 		<input type="submit" name="sendData" id="sendData" value="Modifier" tabindex="{% set tabindex = tabindex+1 %}{{ tabindex }}" class="mini" />
 	</div>
 </form>
-
 {% endblock AdministrationBody %}
-
-
-{% block js %}
-<script type="text/javascript" src="{{JsPath}}jquery.min.js"></script>
-<script type="text/javascript">
-$(function(){
-	$('.delete').click(function(){
-		return confirm("Souhaitez-vous vraiment supprimer cette news ?");
-	});
-});
-</script>
-{{ parent() }}
-{% endblock js %}
